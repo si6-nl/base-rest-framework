@@ -12,6 +12,11 @@
         "aws/aws-sdk-php": "^3.112",
         "league/flysystem-aws-s3-v3": "^1.0"
     },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
     "license": "MIT",
     "authors": [
         {
@@ -20,6 +25,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Si6\\Base\\": "src/"

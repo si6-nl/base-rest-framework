@@ -105,6 +105,6 @@ trait DataTypeRule
 
     protected function double()
     {
-        return ['numeric', 'max:' . PHP_FLOAT_MAX, 'min:' . PHP_FLOAT_MIN];
+        return ['numeric', 'max:' . PHP_FLOAT_MAX, 'min:' . (-1) * PHP_FLOAT_MAX];
     }
 }

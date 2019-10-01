@@ -29,7 +29,7 @@ class BaseController extends Controller
             return [];
         }
 
-        $objects = collect($objects)->mapWithKeys(function ($object) {
+        $objects = collect($objects)->mapWithKeys(function ($object) use ($key) {
             return [$object->{$key} => $object];
         });
 

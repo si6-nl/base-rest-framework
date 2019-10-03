@@ -35,6 +35,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $this->registerAuthProvider();
         $this->registerLogProvider();
         $this->registerStorageProvider();
+        $this->registerExternalService();
     }
 
     /**
@@ -76,6 +77,11 @@ class Si6BaseServiceProvider extends ServiceProvider
     protected function registerStorageProvider()
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/filesystems.php', 'filesystems');
+    }
+
+    protected function registerExternalService()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../../config/external.php', 'external');
     }
 
     /**

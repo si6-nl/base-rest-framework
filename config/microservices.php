@@ -9,5 +9,6 @@ return [
         'betting'      => env('MICROSERVICES_BETTING_HOST', 'http://betting.keirin250.test'),
         'notification' => env('MICROSERVICES_NOTIFICATION_HOST', 'http://notification.keirin250.test'),
         'schedule'     => env('MICROSERVICES_SCHEDULE_HOST', 'http://schedule.keirin250.test'),
+        'data'         => env('MICROSERVICES_DATA_HOST', 'http://data.keirin250.test'),
     ],
 ];

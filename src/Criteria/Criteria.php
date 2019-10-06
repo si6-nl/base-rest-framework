@@ -37,21 +37,12 @@ abstract class Criteria
     public function applyQuery(Builder $query)
     {
         foreach ($this->param as $key => $value) {
-            if (!$this->isRealParam($value) || !$this->isValidCriteria($key)) {
+            if (is_null($value) || !$this->isValidCriteria($key)) {
                 continue;
             }
             $this->applyCriteria($query, $key, $value);
         }
         $this->queryUserCriteria($query);
-    }
-
-    protected function isRealParam($value)
-    {
-        if (is_array($value) && empty($value)) {
-            return false;
-        }
-
-        return !is_null($value);
     }
 
     protected function isValidCriteria($field)

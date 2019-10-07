@@ -3,13 +3,17 @@
 namespace Si6\Base\Criteria;
 
 use Closure;
-use GuzzleHttp\Exception\GuzzleException;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Si6\Base\Exceptions\MicroservicesException;
+use Si6\Base\Exceptions\CriteriaNotHasModel;
 use Si6\Base\Http\Queryable;
+use Si6\Base\Model;
 use Si6\Base\Services\AuthService;
+use Si6\Base\Services\UserService;
 
 abstract class Criteria
 {
@@ -17,23 +21,39 @@ abstract class Criteria
 
     protected $table;
 
+    protected $tablePrefix;
+
+    protected $model;
+
     protected $criteria;
 
     protected $param = [];
 
     protected $flatten = [];
 
+    /**
+     * Criteria constructor.
+     *
+     * @param  array  $param
+     * @throws CriteriaNotHasModel
+     */
     public function __construct(array $param = [])
     {
-        $this->flatten = collect($this->criteria)->flatten()->toArray();
-        $this->param   = $param ?: $this->query($this->flatten);
+        $model = app($this->model);
+        if (!($model instanceof Model)) {
+            throw new CriteriaNotHasModel();
+        }
+        $this->tablePrefix = DB::getTablePrefix();
+        $this->table       = $model->getTable();
+        $this->flatten     = collect($this->criteria)->flatten()->toArray();
+        $this->param       = $param ?: $this->query($this->flatten);
     }
 
-    /**
-     * @param  Builder  $query
-     * @throws GuzzleException
-     * @throws MicroservicesException
-     */
+    protected function getFullTableName()
+    {
+        return $this->tablePrefix . $this->table;
+    }
+
     public function applyQuery(Builder $query)
     {
         foreach ($this->param as $key => $value) {
@@ -43,6 +63,52 @@ abstract class Criteria
             $this->applyCriteria($query, $key, $value);
         }
         $this->queryUserCriteria($query);
+        $this->queryProfileCriteria($query);
+    }
+
+    protected function queryUserCriteria(Builder $query)
+    {
+        $this->queryExternalCriteria($query, 'user', function (Builder $query, Collection $param) {
+            /** @var AuthService $authService */
+            $authService = app(AuthService::class)->getInstance();
+
+            $users = $authService->getUsers($param->toArray());
+
+            $query->whereIn("$this->table.user_id", collect($users)->pluck('id'));
+        });
+    }
+
+    protected function queryProfileCriteria(Builder $query)
+    {
+        $this->queryExternalCriteria($query, 'profile', function (Builder $query, Collection $param) {
+            /** @var UserService $userService */
+            $userService = app(UserService::class)->getInstance();
+
+            $users = $userService->getProfiles($param->toArray());
+
+            $query->whereIn("$this->table.user_id", collect($users)->pluck('user_id'));
+        });
+    }
+
+    protected function queryExternalCriteria(Builder $query, $external, Closure $callback)
+    {
+        if (empty($this->criteria[$external])) {
+            return;
+        }
+
+        $param = collect($this->param);
+
+        $param->each(function ($value, $key) use ($param, $external) {
+            if (!in_array($key, $this->criteria[$external]) || is_null($value)) {
+                $param->forget($key);
+            }
+        });
+
+        if ($param->isEmpty()) {
+            return;
+        }
+
+        $callback($query, $param);
     }
 
     protected function isValidCriteria($field)
@@ -86,7 +152,7 @@ abstract class Criteria
     {
         try {
             $date = Carbon::createFromFormat($format, $value);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $date = null;
         }
 
@@ -105,35 +171,5 @@ abstract class Criteria
         return $this->parseDate($value, $format, function (Carbon $date) {
             return $date->endOfDay();
         });
-    }
-
-    /**
-     * @param  Builder  $query
-     * @throws GuzzleException
-     * @throws MicroservicesException
-     */
-    protected function queryUserCriteria(Builder $query)
-    {
-        if (empty($this->criteria['user'])) {
-            return;
-        }
-
-        $param = collect($this->param);
-        $param->each(function ($value, $key) use ($param) {
-            if (!in_array($key, $this->criteria['user']) || is_null($value)) {
-                $param->forget($key);
-            }
-        });
-
-        if ($param->isEmpty()) {
-            return;
-        }
-
-        /** @var AuthService $authService */
-        $authService = app(AuthService::class)->getInstance();
-
-        $users = $authService->getUsers($param->toArray());
-
-        $query->whereIn("$this->table.user_id", collect($users)->pluck('id'));
     }
 }

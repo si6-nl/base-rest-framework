@@ -2,8 +2,6 @@
 
 namespace Si6\Base\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
-use Si6\Base\Exceptions\MicroservicesException;
 use Si6\Base\User;
 
 class AuthTokenService extends Microservices
@@ -15,11 +13,6 @@ class AuthTokenService extends Microservices
         return config('microservices.host.auth');
     }
 
-    /**
-     * @return User
-     * @throws GuzzleException
-     * @throws MicroservicesException
-     */
     public function authenticate()
     {
         $response = $this->post('authentication');

@@ -2,9 +2,6 @@
 
 namespace Si6\Base\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
-use Si6\Base\Exceptions\MicroservicesException;
-
 class UserService extends Microservices
 {
     use SingletonInstance;
@@ -17,8 +14,6 @@ class UserService extends Microservices
     /**
      * @param $id
      * @return mixed|null
-     * @throws GuzzleException
-     * @throws MicroservicesException
      */
     public function detail($id)
     {
@@ -27,23 +22,11 @@ class UserService extends Microservices
         return $response->data ?? null;
     }
 
-    /**
-     * @param $id
-     * @param  array  $param
-     * @throws GuzzleException
-     * @throws MicroservicesException
-     */
     public function updateBalance($id, array $param)
     {
         $this->put("users/$id/balance", $param);
     }
 
-    /**
-     * @param  array  $param
-     * @return mixed|null
-     * @throws GuzzleException
-     * @throws MicroservicesException
-     */
     public function getProfiles(array $param)
     {
         $response = $this->get('profiles', $param);

@@ -42,6 +42,13 @@ trait ResponseTrait
         return $this;
     }
 
+    public function setIncluded($included)
+    {
+        $this->included = $included;
+
+        return $this;
+    }
+
     public function addDevData(string $key, $data)
     {
         $this->dev[$key] = $data;

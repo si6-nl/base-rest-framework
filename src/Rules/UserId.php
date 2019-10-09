@@ -9,13 +9,6 @@ use Si6\Base\Services\AuthService;
 
 class UserId implements Rule
 {
-    /**
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     * @throws GuzzleException
-     * @throws MicroservicesException
-     */
     public function passes($attribute, $value)
     {
         /** @var AuthService $authService */
@@ -28,6 +21,6 @@ class UserId implements Rule
 
     public function message()
     {
-        return 'The :attribute must be a kana string.';
+        return 'The selected :attribute is invalid.';
     }
 }

@@ -57,7 +57,7 @@ abstract class Criteria
     public function applyQuery(Builder $query)
     {
         foreach ($this->param as $key => $value) {
-            if (is_null($value) || !$this->isValidCriteria($key)) {
+            if (!$this->isValidCriteria($key)) {
                 continue;
             }
             $this->applyCriteria($query, $key, $value);
@@ -113,7 +113,7 @@ abstract class Criteria
 
     protected function isValidCriteria($field)
     {
-        return in_array($field, $this->flatten);
+        return in_array($field, $this->flatten) && !is_null($this->param[$field]);
     }
 
     protected function applyCriteria(Builder $query, $field, $value)

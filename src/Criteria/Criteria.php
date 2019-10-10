@@ -172,4 +172,23 @@ abstract class Criteria
             return $date->endOfDay();
         });
     }
+
+    protected function queryDate(Builder $query, $field, $operator, $time)
+    {
+        if ($time) {
+            $query->where($field, $operator, $time);
+        }
+    }
+
+    protected function queryDateFrom(Builder $query, $field, $value)
+    {
+        $time = $this->parseStartOfDate($value);
+        $this->queryDate($query, $field, '>=', $time);
+    }
+
+    protected function queryDateTo(Builder $query, $field, $value)
+    {
+        $time = $this->parseEndOfDate($value);
+        $this->queryDate($query, $field, '<=', $time);
+    }
 }

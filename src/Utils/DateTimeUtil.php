@@ -15,7 +15,7 @@ trait DateTimeUtil
         return  $date ? $date->toDateString() : $date;
     }
 
-    protected function createFromFormat(string $format, string $time)
+    protected function createFromFormat(string $format, $time)
     {
         try {
             return Carbon::createFromFormat($format, $time);

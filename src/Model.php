@@ -4,14 +4,16 @@ namespace Si6\Base;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Si6\Base\Utils\UniqueIdentity;
 use Illuminate\Support\Facades\DB;
+use Si6\Base\Utils\UniqueIdentity;
+use Throwable;
 
 abstract class Model extends EloquentModel
 {
+    use MultipleUpdatable;
+    use Importable;
+
     public $incrementing = false;
 
     public $createdBy = false;
@@ -29,7 +31,7 @@ abstract class Model extends EloquentModel
         static::creating(function ($model) {
             /** @var Model $model */
             if (!$model->getIncrementing() && $model->getKeyName()) {
-                $model->{$model->getKeyName()} = self::generateId($model->getTable());
+                $model->{$model->getKeyName()} = $model->generateId();
             }
             if ($model->createdBy) {
                 $model->{$model->getCreatedByColumn()} = Auth::id();
@@ -50,22 +52,26 @@ abstract class Model extends EloquentModel
         return self::UPDATED_BY;
     }
 
-    public static function generateId($entity)
+    /**
+     * @return mixed
+     * @throws Throwable
+     */
+    protected function generateId()
     {
-        return DB::transaction(function () use ($entity) {
-            $nextValue = Model::getNextSequence($entity);
-            $id        = UniqueIdentity::id($nextValue);
-            Model::updateSequence($entity);
+        return DB::transaction(function () {
+            $next = $this->getNextSequence();
+            $id   = UniqueIdentity::id($next);
+            $this->updateSequence();
 
             return $id;
         });
     }
 
-    private static function getNextSequence($entity)
+    private function getNextSequence()
     {
         $sequent = DB::table('entity_sequences')
             ->select('next_value')
-            ->where('entity', $entity)
+            ->where('entity', $this->getTable())
             ->lockForUpdate()
             ->first();
 
@@ -75,76 +81,22 @@ abstract class Model extends EloquentModel
 
         DB::table('entity_sequences')
             ->insert([
-                'entity'     => $entity,
+                'entity'     => $this->getTable(),
                 'next_value' => 1,
             ]);
 
         return 1;
     }
 
-    private static function updateSequence($entity)
+    private function updateSequence()
     {
         DB::table('entity_sequences')
-            ->where('entity', $entity)
+            ->where('entity', $this->getTable())
             ->increment('next_value');
     }
 
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format(DATE_ISO8601);
-    }
-
-    public static function multiUpdate($attributes, string $index = null)
-    {
-        if (!$attributes instanceof Collection) {
-            $attributes = collect($attributes);
-        }
-
-        if ($attributes->isEmpty()) {
-            return;
-        }
-
-        $model = new static();
-        $table = DB::getTablePrefix() . $model->getTable();
-        $index = $index ?: $model->getKeyName();
-
-        $sets     = [];
-        $cases    = [];
-        $param    = [];
-        $whereIn  = [];
-        $bindings = [];
-
-        foreach ($attributes as $values) {
-            if (empty($values[$index])) {
-                continue;
-            }
-            foreach ($values as $field => $value) {
-                if ($field !== $index) {
-                    $cases[$field][] = "WHEN ? THEN ?";
-                    $param[$field][] = [$values[$index], $value];
-                }
-            }
-
-            $whereIn[] = "$values[$index]";
-        }
-
-        foreach ($cases as $field => $case) {
-            $case   = implode(' ', $case);
-            $sets[] = "`{$field}` = CASE `{$index}` {$case} END";
-            foreach ($param[$field] as $value) {
-                $bindings[] = $value[0];
-                $bindings[] = $value[1];
-            }
-        }
-
-        $sets[]     = "`updated_at` = ?";
-        $sets       = implode(',', $sets);
-        $bindings[] = Carbon::now();
-        $whereIn    = implode(',', $whereIn);
-
-        $query = /** @lang text */
-            "UPDATE `{$table}` SET {$sets} WHERE `{$index}` IN ({$whereIn})";
-
-        DB::update($query, $bindings);
     }
 }

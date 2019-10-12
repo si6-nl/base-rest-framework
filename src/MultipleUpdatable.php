@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 trait MultipleUpdatable
 {
-    public function multipleUpdate($attributes, $keys = [])
+    protected function multipleUpdate($attributes, $keys = [])
     {
         list($attributes, $keys) = $this->prepareParamUpdating($attributes, $keys);
 

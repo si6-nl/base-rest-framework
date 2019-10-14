@@ -24,7 +24,7 @@ trait DataTypeRule
     {
         $max = (int)pow(2, 16) - 1;
 
-        return ['string', "size:$max"];
+        return ['string', "max:$max"];
     }
 
     protected function unsignedTinyInteger()

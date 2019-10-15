@@ -3,9 +3,11 @@
 namespace Si6\Base;
 
 use DateTimeInterface;
+use Exception;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Schema;
 use Si6\Base\Utils\UniqueIdentity;
 use Throwable;
 
@@ -33,12 +35,7 @@ abstract class Model extends EloquentModel
             if (!$model->getIncrementing() && $model->getKeyName()) {
                 $model->{$model->getKeyName()} = $model->generateId();
             }
-            if ($model->createdBy) {
-                $model->{$model->getCreatedByColumn()} = Auth::id();
-            }
-            if ($model->updatedBy) {
-                $model->{$model->getUpdatedByColumn()} = Auth::id();
-            }
+            self::handleActionByColumn($model);
         });
     }
 
@@ -50,6 +47,26 @@ abstract class Model extends EloquentModel
     protected function getUpdatedByColumn()
     {
         return self::UPDATED_BY;
+    }
+
+    protected static function handleActionByColumn(Model $model)
+    {
+        $id = null;
+
+        try {
+            $id = Auth::id();
+        } catch (Exception $exception) {
+            if (Schema::hasColumn($model->getTable(), 'user_id')) {
+                $id = $model->getAttribute('user_id');
+            }
+        }
+
+        if ($model->createdBy) {
+            $model->{$model->getCreatedByColumn()} = $id;
+        }
+        if ($model->updatedBy) {
+            $model->{$model->getUpdatedByColumn()} = $id;
+        }
     }
 
     /**

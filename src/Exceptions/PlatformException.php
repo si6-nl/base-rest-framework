@@ -2,9 +2,9 @@
 
 namespace Si6\Base\Exceptions;
 
-class SyncPlatformException extends BaseException
+class PlatformException extends BaseException
 {
-    protected $message = 'SYNC_PLATFORM_REQUEST_ERROR';
+    protected $message = 'PLATFORM_REQUEST_ERROR';
 
     public function __construct($data, $statusCode = null, $message = '')
     {

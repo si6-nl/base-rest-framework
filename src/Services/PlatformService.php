@@ -6,9 +6,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
-use Si6\Base\Exceptions\SyncPlatformException;
+use Si6\Base\Exceptions\PlatformException;
 
-class SyncPlatformService extends ExternalService
+class PlatformService extends ExternalService
 {
     use SingletonInstance;
 
@@ -19,7 +19,7 @@ class SyncPlatformService extends ExternalService
 
     protected function baseUri()
     {
-        $uri = config('external.sync_platform.base_uri');
+        $uri = config('external.platform.base_uri');
 
         return Str::finish($uri, '/');
     }
@@ -27,9 +27,9 @@ class SyncPlatformService extends ExternalService
     protected function setDefaultHeaders()
     {
         $this->options['headers'] = [
-            'X-Api-Id'      => config('external.sync_platform.api_id'),
-            'X-Api-Key'     => config('external.sync_platform.api_key'),
-            'Authorization' => config('external.sync_platform.authorization'),
+            'X-Api-Id'      => config('external.platform.api_id'),
+            'X-Api-Key'     => config('external.platform.api_key'),
+            'Authorization' => config('external.platform.authorization'),
         ];
     }
 
@@ -39,7 +39,7 @@ class SyncPlatformService extends ExternalService
      * @param $options
      * @return mixed
      * @throws GuzzleException
-     * @throws SyncPlatformException
+     * @throws PlatformException
      */
     protected function handleRequest($method, $url, $options)
     {
@@ -50,7 +50,7 @@ class SyncPlatformService extends ExternalService
 
         $data = json_decode($response->getBody()->getContents());
         if (!isset($data->result_code)) {
-            throw new SyncPlatformException(null, null, $data->message ?? '');
+            throw new PlatformException(null, null, $data->message ?? '');
         }
 
         if ($data->result_code != 100) {
@@ -62,7 +62,7 @@ class SyncPlatformService extends ExternalService
 
     /**
      * @param  RequestException|mixed  $exception
-     * @throws SyncPlatformException
+     * @throws PlatformException
      */
     protected function handleException($exception)
     {
@@ -71,7 +71,7 @@ class SyncPlatformService extends ExternalService
 
     /**
      * @param  RequestException|mixed  $exception
-     * @throws SyncPlatformException
+     * @throws PlatformException
      */
     protected function syncException($exception)
     {
@@ -85,6 +85,6 @@ class SyncPlatformService extends ExternalService
 
         // TODO: handle error with result_code
 
-        throw new SyncPlatformException($data, $statusCode, $message);
+        throw new PlatformException($data, $statusCode, $message);
     }
 }

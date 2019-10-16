@@ -2,8 +2,8 @@
 
 namespace Si6\Base;
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Si6\Base\Criteria\Criteria;
 use Si6\Base\Criteria\PaginationOptions;
 use Si6\Base\Criteria\SortOptions;

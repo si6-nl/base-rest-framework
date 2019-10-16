@@ -2,7 +2,7 @@
 
 namespace Si6\Base;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Si6\Base\Criteria\Criteria;
 use Si6\Base\Criteria\PaginationOptions;

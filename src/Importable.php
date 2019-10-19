@@ -56,6 +56,11 @@ trait Importable
         return [$attributes, $keys];
     }
 
+    /**
+     * @param Collection $attributes
+     * @param Collection $keys
+     * @return Collection
+     */
     protected function getConditions(Collection $attributes, Collection $keys)
     {
         return $attributes->map(function ($attribute) use ($keys) {
@@ -69,6 +74,11 @@ trait Importable
         });
     }
 
+    /**
+     * @param Collection $attributes
+     * @param Collection $keys
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
     protected function getExists(Collection $attributes, Collection $keys)
     {
         $conditions = $this->getConditions($attributes, $keys);
@@ -82,6 +92,12 @@ trait Importable
         return $query->get();
     }
 
+    /**
+     * @param Collection $attributes
+     * @param Collection $exists
+     * @param Collection $keys
+     * @return Collection
+     */
     protected function partitionUpdateInsert(Collection $attributes, Collection $exists, Collection $keys)
     {
         return $attributes->partition(function ($attribute) use ($exists, $keys) {
@@ -93,6 +109,9 @@ trait Importable
         });
     }
 
+    /**
+     * @param Collection $attributes
+     */
     protected function insertAttributes(Collection $attributes)
     {
         $insert = $attributes->map(function ($item) {
@@ -103,5 +122,16 @@ trait Importable
         });
 
         $this->insert($insert->toArray());
+    }
+
+    /**
+     * @return array
+     */
+    protected function resultForNotImport()
+    {
+        return [
+            'update' => 0,
+            'insert' => 0,
+        ];
     }
 }

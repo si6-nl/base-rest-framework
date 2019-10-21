@@ -28,8 +28,6 @@ class Si6BaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(ExceptionHandler::class, Handler::class);
-
         $this->registerGlobalMiddleware();
         $this->registerMicroservicesDependence();
         $this->registerAuthProvider();

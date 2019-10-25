@@ -16,6 +16,6 @@ class RaceService extends Microservices
      */
     public function validateSyncEntryId($syncEntryId)
     {
-        $this->get('races/entries/validation', ['sync_entry_id' => $syncEntryId]);
+        $this->get('races/entries/validation', ['entries_id' => $syncEntryId]);
     }
 }

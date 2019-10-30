@@ -10,4 +10,12 @@ class RaceService extends Microservices
     {
         return config('microservices.host.race');
     }
+
+    /**
+     * @param $syncEntryId
+     */
+    public function validateSyncEntryId($syncEntryId)
+    {
+        $this->get('races/entries/validation', ['entries_id' => $syncEntryId]);
+    }
 }

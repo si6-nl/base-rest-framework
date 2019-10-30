@@ -10,14 +10,14 @@ class ElasticsearchFormatter extends BaseElasticsearchFormatter
     {
         $record = parent::format($record);
 
-        if ($record['context'] && $this->contextHasException($record['context'])) {
+        if ($this->recordHasContext($record) && $this->contextHasException($record['context'])) {
             $record['context']['exception'] = $this->getContextException($record['context']['exception']);
         }
 
         return $this->getDocument($record);
     }
 
-    public function getContextException(array $recordContext)
+    protected function getContextException(array $recordContext)
     {
         return [
             'class'     => $recordContext['class'] ?? '',

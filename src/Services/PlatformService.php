@@ -50,7 +50,7 @@ class PlatformService extends ExternalService
 
         $data = json_decode($response->getBody()->getContents());
         if (!isset($data->result_code)) {
-            throw new PlatformException(null, null, $data->message ?? '');
+            throw new PlatformException($options, null, $data->message ?? '', 900);
         }
 
         if ($data->result_code != 100) {
@@ -85,6 +85,6 @@ class PlatformService extends ExternalService
 
         // TODO: handle error with result_code
 
-        throw new PlatformException($data, $statusCode, $message);
+        throw new PlatformException($data, $statusCode, $message, $exception->result_code ?? null);
     }
 }

@@ -4,6 +4,7 @@ namespace Si6\Base\Http;
 
 use Exception;
 use Illuminate\Http\Response;
+use Si6\Base\Exceptions\PlatformException;
 
 trait ResponseTrait
 {
@@ -74,6 +75,11 @@ trait ResponseTrait
             'line'    => $exception->getLine(),
             'trace'   => $exception->getTraceAsString(),
         ];
+
+        if ($exception instanceof PlatformException) {
+            $this->debug['request'] = request()->all();
+        }
+
     }
 
     protected function handleMessage($message)

@@ -20,11 +20,12 @@ class ElasticsearchFormatter extends BaseElasticsearchFormatter
     protected function getContextException(array $recordContext)
     {
         return [
-            'class'     => $recordContext['class'] ?? '',
-            'message'   => $recordContext['message'] ?? '',
-            'code'      => intval($recordContext['code']) ?? '',
-            'file'      => $recordContext['file'] ?? '',
-            'trace'     => $recordContext['trace'] ?? '',
+            'class'         => $recordContext['class'] ?? '',
+            'message'       => $recordContext['message'] ?? '',
+            'code'          => intval($recordContext['code']) ?? '',
+            'file'          => $recordContext['file'] ?? '',
+            'trace'         => $recordContext['trace'] ?? '',
+            'request'       => $recordContext['request'] ?? '',
         ];
     }
 

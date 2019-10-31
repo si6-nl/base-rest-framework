@@ -4,9 +4,9 @@ namespace Si6\Base\Logging;
 
 use Monolog\Logger;
 use Monolog\Handler\ElasticsearchHandler;
-use Monolog\Formatter\ElasticsearchFormatter;
 use Elasticsearch\ClientBuilder;
 use Si6\Base\Logging\AWSElasticsearchHandler;
+use Si6\Base\Logging\Formatter\ElasticsearchFormatter;
 
 class ElasticsearchLogger
 {

@@ -18,4 +18,12 @@ class RaceService extends Microservices
     {
         $this->get('races/entries/validation', ['entries_id' => $syncEntryId]);
     }
+
+    /**
+     * @param $raceId
+     */
+    public function validateRaceId($raceId)
+    {
+        $this->get('races/validation', ['race_id' => $raceId]);
+    }
 }

@@ -40,6 +40,8 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        $exception = $this->handleExceptionReport($exception);
+
         parent::report($exception);
     }
 

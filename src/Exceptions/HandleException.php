@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Si6\Base\Exceptions\BaseException;
 use Si6\Base\Exceptions\MicroservicesException;
+use Si6\Base\Exceptions\PlatformException;
 use Si6\Base\Http\ResponseTrait;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -47,7 +48,7 @@ trait HandleException
         if ($exception instanceof BaseException) {
             $this->handleBase($exception);
         }
-        
+
         if ($exception instanceof AuthenticationException) {
             $this->handleAuth($exception);
         }
@@ -60,6 +61,15 @@ trait HandleException
         if (app()->environment(['local', 'dev']) && env('APP_DEBUG') == true) {
             $this->setDebug($exception);
         }
+    }
+
+    public function handleExceptionReport(Exception $exception)
+    {
+        if ($exception instanceof PlatformException) {
+            return $this->handlePlatformExceptionReport($exception);
+        }
+
+        return $exception;
     }
 
     protected function handleValidation(ValidationException $exception)
@@ -98,5 +108,12 @@ trait HandleException
     {
         $this->setStatusCode(Response::HTTP_UNAUTHORIZED)
             ->addError(null, 'UNAUTHENTICATED');
+    }
+
+    protected function handlePlatformExceptionReport(PlatformException $exception)
+    {
+        $exception->request = request()->all();
+
+        return $exception;
     }
 }

@@ -5,12 +5,10 @@ namespace Si6\Base\Providers;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use Si6\Base\Exceptions\Handler;
 use Si6\Base\Http\Middleware\Authenticate;
 use Si6\Base\Http\Middleware\Authorize;
 use Si6\Base\Http\Middleware\BeforeResponse;
@@ -34,6 +32,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $this->registerLogProvider();
         $this->registerStorageProvider();
         $this->registerExternalService();
+        $this->registerBettingService();
     }
 
     /**
@@ -80,6 +79,11 @@ class Si6BaseServiceProvider extends ServiceProvider
     protected function registerExternalService()
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/external.php', 'external');
+    }
+
+    public function registerBettingService()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../../config/vote.php', 'vote');
     }
 
     /**

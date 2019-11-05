@@ -8,7 +8,11 @@ class ElasticsearchFormatter extends BaseElasticsearchFormatter
 {
     public function format(array $record)
     {
-        if (property_exists($record['context']['exception'], 'request')) {
+        if (
+            $this->recordHasContext($record) &&
+            $this->contextHasException($record['context']) &&
+            property_exists($record['context']['exception'], 'request')
+        ) {
             $record['extra']['request'] = $record['context']['exception']->request;
         }
 

@@ -5,6 +5,7 @@ namespace Si6\Base\Services;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Si6\Base\Exceptions\PlatformException;
 

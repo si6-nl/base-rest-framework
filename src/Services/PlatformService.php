@@ -45,12 +45,13 @@ class PlatformService extends ExternalService
     protected function handleRequest($method, $url, $options)
     {
         $url     = trim($url, '/');
-        $options = array_merge($this->options, $options);
+        $logOptions = $options = array_merge($this->options, $options);
+        unset($logOptions['headers']);
 
         Log::info('SEND_REQUEST_TO_PLATFORM', [
             'method'    => $method,
             'url'       => $url,
-            'options'   => $options
+            'options'   => $logOptions
         ]);
 
         $response = $this->client->request($method, $url, $options);

@@ -47,7 +47,11 @@ class PlatformService extends ExternalService
         $url     = trim($url, '/');
         $options = array_merge($this->options, $options);
 
-        Log::info('SEND_REQUEST_TO_PLATFORM', $method, $url, $options);
+        Log::info('SEND_REQUEST_TO_PLATFORM', [
+            'method'    => $method,
+            'url'       => $url,
+            'options'   => $options
+        ]);
 
         $response = $this->client->request($method, $url, $options);
 
@@ -57,11 +61,11 @@ class PlatformService extends ExternalService
         }
 
         if ($data->result_code != 100) {
-            Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
+            Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', (array) $data);
             $this->syncException($data);
         }
 
-        Log::info('SEND_REQUEST_TO_PLATFORM_SUCCEED', $data);
+        Log::info('SEND_REQUEST_TO_PLATFORM_SUCCEED', (array) $data);
 
         return $data;
     }

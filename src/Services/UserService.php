@@ -22,6 +22,17 @@ class UserService extends Microservices
         return $response->data ?? null;
     }
 
+    /**
+     * @param $id
+     * @return mixed|null
+     */
+    public function info($id)
+    {
+        $response = $this->get('users/' . $id . '/info');
+
+        return $response->data ?? null;
+    }
+
     public function updateBalance($id, array $param)
     {
         $this->put("users/$id/balance", $param);

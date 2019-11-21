@@ -173,7 +173,7 @@ abstract class Criteria
         });
     }
 
-    protected function queryDate(Builder $query, $field, $operator, $time)
+    protected function queryCriteriaDate(Builder $query, $field, $operator, $time)
     {
         if ($time) {
             $query->where($field, $operator, $time);
@@ -183,12 +183,12 @@ abstract class Criteria
     protected function queryDateFrom(Builder $query, $field, $value)
     {
         $time = $this->parseStartOfDate($value);
-        $this->queryDate($query, $field, '>=', $time);
+        $this->queryCriteriaDate($query, $field, '>=', $time);
     }
 
     protected function queryDateTo(Builder $query, $field, $value)
     {
         $time = $this->parseEndOfDate($value);
-        $this->queryDate($query, $field, '<=', $time);
+        $this->queryCriteriaDate($query, $field, '<=', $time);
     }
 }

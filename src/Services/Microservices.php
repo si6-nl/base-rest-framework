@@ -12,6 +12,8 @@ abstract class Microservices
 {
     use HttpClient;
 
+    protected $isInternal = false;
+
     public function __construct()
     {
         $this->setupClient();
@@ -37,6 +39,16 @@ abstract class Microservices
     public function syncAuthorization()
     {
         $this->options['headers']['Authorization'] = request()->header('Authorization');
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function internal()
+    {
+        $this->isInternal = true;
 
         return $this;
     }
@@ -106,6 +118,10 @@ abstract class Microservices
 
         // append default version v1
         if (!preg_match('/^v[2-9]/', Str::substr($url, 0, 2))) {
+            if ($this->isInternal) {
+                $url = 'internal/' . $url;
+            }
+
             $url = 'v1/' . $url;
         }
 

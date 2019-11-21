@@ -26,4 +26,15 @@ class RaceService extends Microservices
     {
         $this->get('races/validation', ['race_id' => $raceId]);
     }
+
+    /**
+     * @param $id
+     * @return mixed|null
+     */
+    public function detail($id)
+    {
+        $response = $this->internal()->get("races/$id");
+
+        return $response->data ?? null;
+    }
 }

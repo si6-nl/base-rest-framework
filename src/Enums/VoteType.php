@@ -24,4 +24,13 @@ class VoteType extends Enum
     const TRIFECTA         = 50;
     const TRIO             = 51;
     const WIDE             = 60;
+
+    public static function isQuinella($type)
+    {
+        return in_array($type, [
+            self::QUINELLA,
+            self::BRACKET_QUINELLA,
+            self::TRIO,
+        ]);
+    }
 }

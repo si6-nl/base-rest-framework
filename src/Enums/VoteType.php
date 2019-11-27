@@ -25,6 +25,23 @@ class VoteType extends Enum
     const TRIO             = 51;
     const WIDE             = 60;
 
+    protected static $text = [
+        self::WIN              => '単勝',
+        self::PLACE_SHOW       => '複勝',
+        self::EXACTA           => '２車単',
+        self::QUINELLA         => '２車複',
+        self::BRACKET_EXACTA   => '２枠単',
+        self::BRACKET_QUINELLA => '２枠複',
+        self::TRIFECTA         => '３連単',
+        self::TRIO             => '３連複',
+        self::WIDE             => 'ワイド',
+    ];
+
+    public static function getText($value)
+    {
+        return self::$text[$value] ?? '';
+    }
+
     public static function isQuinella($type)
     {
         return in_array($type, [

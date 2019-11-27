@@ -20,4 +20,15 @@ class DataService extends Microservices
     {
         $this->get('data/countries/validation', ['country_id' => $countryId]);
     }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    public function mastersWithoutPagination(array $param)
+    {
+        $response = $this->get('masters/all', $param);
+
+        return $response->data ?? [];
+    }
 }

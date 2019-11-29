@@ -69,6 +69,10 @@ trait HandleException
             return $this->handlePlatformExceptionReport($exception);
         }
 
+        if ($exception instanceof MicroservicesException) {
+            return $this->handleMicroservicesExceptionReport($exception);
+        }
+
         return $exception;
     }
 
@@ -112,7 +116,20 @@ trait HandleException
 
     protected function handlePlatformExceptionReport(PlatformException $exception)
     {
-        $exception->request = request()->all();
+        $exception->request = [
+            'remote-address'    => request()->server('REMOTE_ADDR'),
+            'params'            => request()->all(),
+        ];
+
+        return $exception;
+    }
+
+    protected function handleMicroservicesExceptionReport(MicroservicesException $exception)
+    {
+        $exception->request = [
+            'remote-address'    => request()->server('REMOTE_ADDR'),
+            'params'            => request()->all(),
+        ];
 
         return $exception;
     }

@@ -127,7 +127,7 @@ trait HandleException
     protected function handleMicroservicesExceptionReport(MicroservicesException $exception)
     {
         $exception->request = [
-            'remote-address'    => request()->fullUrl(),
+            'remote-url'    => request()->fullUrl(),
             'params'            => request()->all(),
         ];
 

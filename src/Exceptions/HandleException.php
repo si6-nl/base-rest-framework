@@ -117,7 +117,7 @@ trait HandleException
     protected function handlePlatformExceptionReport(PlatformException $exception)
     {
         $exception->request = [
-            'remote-address'    => request()->server('REMOTE_ADDR'),
+            'remote-address'    => request()->fullUrl(),
             'params'            => request()->all(),
         ];
 
@@ -127,7 +127,7 @@ trait HandleException
     protected function handleMicroservicesExceptionReport(MicroservicesException $exception)
     {
         $exception->request = [
-            'remote-address'    => request()->server('REMOTE_ADDR'),
+            'remote-address'    => request()->fullUrl(),
             'params'            => request()->all(),
         ];
 

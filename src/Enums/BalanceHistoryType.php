@@ -12,6 +12,7 @@ class BalanceHistoryType extends Enum
     const DEPOSIT             = 0;
     const VOTE                = 1;
     const RETURN_VOTE_FAILURE = 2;
+    const REFUND              = 3;
 
     /**
      * @param $type

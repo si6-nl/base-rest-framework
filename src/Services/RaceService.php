@@ -33,7 +33,7 @@ class RaceService extends Microservices
      */
     public function detail($id)
     {
-        $response = $this->internal()->get("races/$id");
+        $response = $this->internal()->get("races/detail", ['id' => $id]);
 
         return $response->data ?? null;
     }

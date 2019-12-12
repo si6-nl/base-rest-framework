@@ -10,13 +10,13 @@ trait MultipleUpdatable
 {
     protected function multipleUpdate($attributes, $keys = [])
     {
-        list($attributes, $keys) = $this->prepareParamUpdating($attributes, $keys);
+        [$attributes, $keys] = $this->prepareParamUpdating($attributes, $keys);
 
         if (!$attributes) {
             return 0;
         }
 
-        list($table, $sets, $where, $bindings) = $this->prepareQueryUpdate($attributes, $keys);
+        [$table, $sets, $where, $bindings] = $this->prepareQueryUpdate($attributes, $keys);
 
         $query = /** @lang text */
             "UPDATE `{$table}` SET {$sets} WHERE ({$where})";
@@ -44,9 +44,9 @@ trait MultipleUpdatable
     {
         $table = DB::getTablePrefix() . $this->getTable();
 
-        list($cases, $where) = $this->analyzeAttributes($attributes, $keys);
+        [$cases, $where] = $this->analyzeAttributes($attributes, $keys);
 
-        list($sets, $bindings) = $this->analyzeCases($cases);
+        [$sets, $bindings] = $this->analyzeCases($cases);
 
         $sets              = implode(',', $sets);
         $where['query']    = implode(' OR ', $where['query']);
@@ -59,7 +59,7 @@ trait MultipleUpdatable
     protected function emptyAttribute($attribute, $keys)
     {
         foreach ($keys as $key) {
-            if (!isset($attribute[$key])) {
+            if (!array_key_exists($key, $attribute)) {
                 return true;
             }
         }
@@ -69,8 +69,6 @@ trait MultipleUpdatable
 
     protected function analyzeAttributes(array $attributes, Collection $keys)
     {
-        $conditions = $this->makeConditions($keys);
-
         $cases = $where = [
             'query'    => [],
             'bindings' => [],
@@ -81,12 +79,14 @@ trait MultipleUpdatable
                 continue;
             }
 
+            $conditions = $this->makeConditions($attribute, $keys);
+
             foreach ($attribute as $field => $value) {
                 if ($keys->contains($field)) {
                     continue;
                 }
 
-                $cases['query'][$field][]   = "WHEN ({$conditions}) THEN ?";
+                $cases['query'][$field][]    = "WHEN ({$conditions}) THEN ?";
                 $cases['bindings'][$field][] = $this->getValueFromAttribute($attribute, $keys)->merge([$value]);
             }
 
@@ -97,18 +97,24 @@ trait MultipleUpdatable
         return [$cases, $where];
     }
 
-    protected function makeConditions(Collection $keys)
+    protected function makeConditions(array $attribute, Collection $keys)
     {
-        return $keys->map(function ($key) {
-            return "`{$key}` = ?";
+        return $keys->map(function ($key) use ($attribute) {
+            return is_null($attribute[$key]) ? "`{$key}` IS NULL" : "`{$key}` = ?";
         })->implode(' AND ');
     }
 
     protected function getValueFromAttribute(array $attribute, Collection $keys)
     {
-        return $keys->map(function ($key) use ($attribute) {
-            return $attribute[$key];
+        $values = collect([]);
+
+        $keys->each(function ($key) use ($attribute, $values) {
+            if (!is_null($attribute[$key])) {
+                $values->push($attribute[$key]);
+            }
         });
+
+        return $values;
     }
 
     protected function analyzeCases(array $cases)

@@ -2,7 +2,7 @@
 
 namespace Si6\Base\Utils;
 
-class OddUtil
+class OddsUtil
 {
     public function permutations(array $set, $subset_size = null)
     {

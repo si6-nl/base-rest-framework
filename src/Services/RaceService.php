@@ -28,12 +28,12 @@ class RaceService extends Microservices
     }
 
     /**
-     * @param $id
+     * @param array $param
      * @return mixed|null
      */
-    public function detail($id)
+    public function detail(array $param = [])
     {
-        $response = $this->internal()->get("races/$id");
+        $response = $this->internal()->get("races/detail", $param);
 
         return $response->data ?? null;
     }

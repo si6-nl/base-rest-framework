@@ -50,4 +50,25 @@ class VoteType extends Enum
             self::TRIO,
         ]);
     }
+
+    public static function isRequireSecondPosition($type)
+    {
+        return in_array($type, [
+            VoteType::EXACTA,
+            VoteType::QUINELLA,
+            VoteType::BRACKET_EXACTA,
+            VoteType::BRACKET_QUINELLA,
+            VoteType::TRIFECTA,
+            VoteType::TRIO,
+            VoteType::WIDE,
+        ]);
+    }
+
+    public static function isRequireThirdPosition($type)
+    {
+        return in_array($type, [
+            VoteType::TRIFECTA,
+            VoteType::TRIO,
+        ]);
+    }
 }

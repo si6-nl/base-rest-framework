@@ -26,6 +26,11 @@ abstract class Model extends EloquentModel
 
     const UPDATED_BY = 'updated_by';
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
+
     protected static function boot()
     {
         parent::boot();

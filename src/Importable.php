@@ -14,7 +14,7 @@ trait Importable
          * @var Collection $attributes
          * @var Collection $keys
          */
-        list($attributes, $keys) = $this->prepareParamImporting($attributes, $keys);
+        [$attributes, $keys] = $this->prepareParamImporting($attributes, $keys);
 
         /** @var Collection $exists */
         $exists = $this->getExists($attributes, $keys);
@@ -23,7 +23,7 @@ trait Importable
          * @var Collection $updateAttributes
          * @var Collection $insertAttributes
          */
-        list($updateAttributes, $insertAttributes) = $this->partitionUpdateInsert($attributes, $exists, $keys);
+        [$updateAttributes, $insertAttributes] = $this->partitionUpdateInsert($attributes, $exists, $keys);
 
         $this->multipleUpdate($updateAttributes, $keys);
 
@@ -115,8 +115,11 @@ trait Importable
     protected function insertAttributes(Collection $attributes)
     {
         $insert = $attributes->map(function ($item) {
-            $item['id']         = $this->generateId();
             $item['created_at'] = $item['updated_at'] = Carbon::now();
+
+            if (!$this->incrementing) {
+                $item['id'] = $this->generateId();
+            }
 
             return $item;
         });

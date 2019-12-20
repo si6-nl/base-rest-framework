@@ -11,7 +11,6 @@ namespace Si6\Base\Enums;
  * @method static static ACCOUNTING()
  * @method static static STADIUM_MANAGER()
  * @method static static STADIUM_STAFF()
- * @method static static BLOG_MODERATOR()
  */
 class AdminRole extends Enum
 {
@@ -23,5 +22,4 @@ class AdminRole extends Enum
     const ACCOUNTING         = 'admin_accounting';
     const STADIUM_MANAGER    = 'admin_stadium_manager';
     const STADIUM_STAFF      = 'admin_stadium_staff';
-    const BLOG_MODERATOR     = 'admin_blog_moderator';
 }

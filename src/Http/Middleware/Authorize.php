@@ -17,13 +17,47 @@ class Authorize
      */
     public function handle($request, Closure $next, ...$permissions)
     {
+        if (!empty($permissions[0]) && $permissions[0] === 'or') {
+            $this->authorizeOr($permissions);
+        } else {
+            $this->authorizeAll($permissions);
+        }
+
+        return $next($request);
+    }
+
+    /**
+     * @param $permissions
+     * @throws Forbidden
+     */
+    protected function authorizeOr($permissions)
+    {
+        unset($permissions[0]);
+        $hasPermission = false;
+        $user = Auth::user();
+        foreach ($permissions as $permission) {
+            if (in_array($permission, $user->permissions())) {
+                $hasPermission = true;
+                break;
+            }
+        }
+        if (!$hasPermission) {
+            $forbidden = implode('_or_', $permissions);
+            throw new Forbidden($forbidden);
+        }
+    }
+
+    /**
+     * @param $permissions
+     * @throws Forbidden
+     */
+    protected function authorizeAll($permissions)
+    {
         $user = Auth::user();
         foreach ($permissions as $permission) {
             if (!in_array($permission, $user->permissions())) {
                 throw new Forbidden($permission);
             }
         }
-
-        return $next($request);
     }
 }

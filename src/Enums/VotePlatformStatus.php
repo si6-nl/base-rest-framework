@@ -3,13 +3,15 @@
 namespace Si6\Base\Enums;
 
 /**
- * @method static static VALID()
- * @method static static VOTE_EXPIRED()
- * @method static static CAN_NOT_VOTE()
+ * @method static static BEFORE()
+ * @method static static PROCESSING()
+ * @method static static FINISHED()
+ * @method static static STOPPED()
  */
 class VotePlatformStatus extends Enum
 {
-    const VALID        = 0;
-    const VOTE_EXPIRED = 1;
-    const CAN_NOT_VOTE = 2;
+    const BEFORE     = 0;
+    const PROCESSING = 1;
+    const FINISHED   = 2;
+    const STOPPED    = 3;
 }

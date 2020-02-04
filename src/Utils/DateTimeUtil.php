@@ -23,12 +23,13 @@ trait DateTimeUtil
     /**
      * @param string $format
      * @param $time
+     * @param null $timezone
      * @return \Carbon\Carbon|null
      */
-    public function createFromFormat(string $format, $time)
+    public function createFromFormat(string $format, $time, $timezone = null)
     {
         try {
-            return Carbon::createFromFormat($format, $time);
+            return Carbon::createFromFormat($format, $time, $timezone);
         } catch (Exception $exception) {
             return null;
         }

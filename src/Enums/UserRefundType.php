@@ -20,4 +20,12 @@ class UserRefundType extends Enum
     const TRANSFER_TO_DEPOSIT_IN_DEPOSIT_SCREEN = 4;
     const SPECIAL                               = 5;
     const RETURN                                = 6;
+
+    public static function typesAvailableAmount()
+    {
+        return [
+            self::VOTE,
+            self::SPECIAL,
+        ];
+    }
 }

@@ -3,15 +3,15 @@
 namespace Si6\Base\Enums;
 
 /**
- * @method static static BEFORE()
- * @method static static PROCESSING()
- * @method static static FINISHED()
- * @method static static STOPPED()
+ * @method static static START()
+ * @method static static FINISH()
+ * @method static static STOP()
+ * @method static static CHANGE_EXPIRE()
  */
 class RaceVoteStatus extends Enum
 {
-    const BEFORE     = 0;
-    const PROCESSING = 1;
-    const FINISHED   = 2;
-    const STOPPED    = 3;
+    const START         = 100;
+    const FINISH        = 200;
+    const STOP          = 300;
+    const CHANGE_EXPIRE = 400;
 }

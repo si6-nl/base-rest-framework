@@ -150,6 +150,17 @@ trait ResponseTrait
         return $this->getResponse();
     }
 
+    /**
+     * @param $error
+     * @return $this
+     */
+    public function addCustomError($error)
+    {
+        $this->errors[] = $error;
+
+        return $this;
+    }
+
     public function error($message, $statusCode = 500)
     {
         $this->setStatusCode($statusCode)

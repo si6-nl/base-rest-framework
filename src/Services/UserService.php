@@ -35,7 +35,9 @@ class UserService extends Microservices
 
     public function updateBalance(array $param)
     {
-        $this->internal()->put('users/' . $param['user_id'] . '/balance', $param);
+        $response = $this->internal()->put('balances', $param);
+
+        return $response->data ?? null;
     }
 
     public function getProfiles(array $param)

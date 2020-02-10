@@ -10,6 +10,7 @@ namespace Si6\Base\Enums;
  * @method static static REFUND()
  * @method static static REFUND_EXPIRATION()
  * @method static static EXPIRATION()
+ * @method static static REFUND_RETURN()
  */
 class DepositType extends Enum
 {
@@ -20,4 +21,5 @@ class DepositType extends Enum
     const REFUND            = 4;
     const REFUND_EXPIRATION = 5;
     const EXPIRATION        = 6;
+    const REFUND_RETURN     = 7;
 }

@@ -56,17 +56,17 @@ class PlatformService extends ExternalService
 
         $response = $this->client->request($method, $url, $options);
 
-        $data = json_decode($response->getBody()->getContents());
-        if (!isset($data->result_code)) {
-            throw new PlatformException($options, null, $data->message ?? '', 900);
+        $data = json_decode($response->getBody()->getContents(), true);
+        if (!isset($data['result_code'])) {
+            throw new PlatformException($options, null, $data['message'] ?? '', 900);
         }
 
-        if ($data->result_code != 100) {
-            Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', (array) $data);
+        if ($data['result_code'] != 100) {
+            Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
             $this->syncException($data);
         }
 
-        Log::info('SEND_REQUEST_TO_PLATFORM_SUCCEED', (array) $data);
+        Log::info('SEND_REQUEST_TO_PLATFORM_SUCCEED', $data);
 
         return $data;
     }
@@ -96,6 +96,6 @@ class PlatformService extends ExternalService
 
         // TODO: handle error with result_code
 
-        throw new PlatformException($data, $statusCode, $message, $exception->result_code ?? null);
+        throw new PlatformException($data, $statusCode, $message, $exception['result_code'] ?? null);
     }
 }

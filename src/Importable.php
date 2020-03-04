@@ -2,9 +2,10 @@
 
 namespace Si6\Base;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 trait Importable
 {
@@ -77,15 +78,19 @@ trait Importable
     /**
      * @param Collection $attributes
      * @param Collection $keys
-     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     protected function getExists(Collection $attributes, Collection $keys)
     {
         $conditions = $this->getConditions($attributes, $keys);
-        /** @var Builder $query */
-        $query = static::where(function (Builder $query) use ($conditions) {
+
+        $query = DB::table(static::getTable());
+
+        $query->where(function (Builder $query) use ($conditions) {
             $conditions->each(function ($item) use ($query) {
-                $query->orWhere($item);
+                $query->orWhere(function (Builder $query) use ($item) {
+                    $query->where($item);
+                });
             });
         });
 

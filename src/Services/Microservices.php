@@ -69,7 +69,7 @@ abstract class Microservices
 
         $response = $this->client->request($method, $url, $options);
         if ($response->getStatusCode() !== Response::HTTP_OK) {
-            $data = json_decode($response->getBody()->getContents(), true);
+            $data = json_decode($response->getBody()->getContents());
             throw new MicroservicesException($data, $response->getStatusCode());
         }
 

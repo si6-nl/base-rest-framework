@@ -18,12 +18,12 @@ class MicroservicesException extends BaseException
 
     public function errors()
     {
-        if (empty($this->dataResponse['errors'])) {
+        if (empty($this->dataResponse->errors)) {
             return [];
         }
 
-        if (is_array($this->dataResponse['errors'])) {
-            return $this->dataResponse['errors'];
+        if (is_array($this->dataResponse->errors)) {
+            return $this->dataResponse->errors;
         }
 
         return [['message' => 'MICROSERVICES_REQUEST_ERROR']];

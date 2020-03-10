@@ -77,7 +77,7 @@ class PlatformService extends ExternalService
      */
     protected function handleException($exception)
     {
-        $this->syncException($exception);
+        $this->syncException((array)$exception);
     }
 
     /**

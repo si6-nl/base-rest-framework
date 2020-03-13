@@ -34,4 +34,22 @@ trait DateTimeUtil
             return null;
         }
     }
+
+    /**
+     * @param string $date
+     * @param null $toTz
+     * @return array|null
+     */
+    public function convertDateToRangeWithTimezone(string $date, $toTz = null)
+    {
+        $toTz = $toTz ?: 'Asia/Tokyo';
+
+        $date = $this->createFromFormat('Y-m-d', $date, $toTz);
+
+        if (!$date) {
+            return null;
+        }
+
+        return [$date->startOfDay(), $date->endOfDay()];
+    }
 }

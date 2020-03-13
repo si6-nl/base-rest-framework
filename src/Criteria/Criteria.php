@@ -151,7 +151,7 @@ abstract class Criteria
     protected function parseDate($value, $format, Closure $callback)
     {
         try {
-            $date = Carbon::createFromFormat($format, $value);
+            $date = Carbon::createFromFormat($format, $value, 'Asia/Tokyo');
         } catch (Exception $exception) {
             $date = null;
         }

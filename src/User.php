@@ -4,6 +4,7 @@ namespace Si6\Base;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Si6\Base\Enums\AdminRole;
 
 class User extends Model implements AuthenticatableContract
 {
@@ -28,5 +29,13 @@ class User extends Model implements AuthenticatableContract
     public function permissions()
     {
         return $this->permissions ?? [];
+    }
+
+    public function isAdmin()
+    {
+        $roles      = collect($this->roles ?? []);
+        $adminRoles = AdminRole::getValues();
+
+        return $roles->intersect($adminRoles)->isNotEmpty();
     }
 }

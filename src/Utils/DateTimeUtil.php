@@ -50,6 +50,12 @@ trait DateTimeUtil
             return null;
         }
 
-        return [$date->startOfDay(), $date->endOfDay()];
+        $start = $date->copy()->startOfDay();
+        $end   = $date->copy()->endOfDay();
+
+        $start->setTimezone('UTC');
+        $end->setTimezone('UTC');
+
+        return [$start, $end];
     }
 }

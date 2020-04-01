@@ -2,6 +2,7 @@
 
 namespace Si6\Base\Providers;
 
+use Exception;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Si6\Base\AccessTokenGuard;
@@ -15,7 +16,11 @@ class AuthServiceProvider extends ServiceProvider
             /** @var AuthTokenService $authService */
             $authService = app(AuthTokenService::class)->getInstance();
 
-            $user = $authService->authenticate();
+            try {
+                $user = $authService->authenticate();
+            } catch (Exception $e) {
+                $user = null;
+            }
 
             return new AccessTokenGuard($user);
         });

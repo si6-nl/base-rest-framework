@@ -16,11 +16,7 @@ class AuthServiceProvider extends ServiceProvider
             /** @var AuthTokenService $authService */
             $authService = app(AuthTokenService::class)->getInstance();
 
-            try {
-                $user = $authService->authenticate();
-            } catch (Exception $e) {
-                $user = null;
-            }
+            $user = $authService->authenticate();
 
             return new AccessTokenGuard($user);
         });

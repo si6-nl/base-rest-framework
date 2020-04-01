@@ -15,7 +15,7 @@ class AuthTokenService extends Microservices
 
     public function authenticate()
     {
-        $response = $this->post('authentication');
+        $response = $this->internal()->post('users/auth');
 
         $user = new User();
         $user->fill((array)($response->data ?? []));

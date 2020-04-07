@@ -162,14 +162,14 @@ abstract class Criteria
     protected function parseStartOfDate($value, $format = 'Y-m-d')
     {
         return $this->parseDate($value, $format, function (Carbon $date) {
-            return $date->startOfDay();
+            return $date->startOfDay()->setTimezone('UTC');
         });
     }
 
     protected function parseEndOfDate($value, $format = 'Y-m-d')
     {
         return $this->parseDate($value, $format, function (Carbon $date) {
-            return $date->endOfDay();
+            return $date->endOfDay()->setTimezone('UTC');
         });
     }
 

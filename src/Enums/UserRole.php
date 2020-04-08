@@ -22,4 +22,20 @@ class UserRole extends Enum
     const EXPELLED          = 'user_expelled';
     const LEFT              = 'user_left';
     const DELETED           = 'user_deleted';
+
+    protected static $status = [
+        UserStatus::NEWBIE            => self::NEWBIE,
+        UserStatus::OFFICIAL          => self::OFFICIAL,
+        UserStatus::IDENTITY_VERIFIED => self::IDENTITY_VERIFIED,
+        UserStatus::LIMITED           => self::LIMITED,
+        UserStatus::SUSPENDED         => self::SUSPENDED,
+        UserStatus::EXPELLED          => self::EXPELLED,
+        UserStatus::LEFT              => self::LEFT,
+        UserStatus::DELETED           => self::DELETED,
+    ];
+
+    public static function roleByStatus($status)
+    {
+        return self::$status[$status] ?? self::NEWBIE;
+    }
 }

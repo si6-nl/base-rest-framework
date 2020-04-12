@@ -33,6 +33,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $this->registerStorageProvider();
         $this->registerExternalService();
         $this->registerBettingService();
+        $this->mergeConfigFrom(__DIR__ . '/../../config/time.php', 'time');
     }
 
     /**

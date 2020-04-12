@@ -2,7 +2,6 @@
 
 namespace Si6\Base\Providers;
 
-use Exception;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Si6\Base\AccessTokenGuard;

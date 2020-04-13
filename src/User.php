@@ -26,9 +26,9 @@ class User extends Model implements AuthenticatableContract
         'updated_at',
     ];
 
-    public function permissions()
+    public function getPermissions()
     {
-        return $this->permissions ?? [];
+        return $this->getAttribute('permissions') ?? [];
     }
 
     public function isAdmin()

@@ -36,7 +36,7 @@ class Authorize
         $hasPermission = false;
         $user = Auth::user();
         foreach ($permissions as $permission) {
-            if (in_array($permission, $user->permissions())) {
+            if (in_array($permission, $user->getPermissions())) {
                 $hasPermission = true;
                 break;
             }
@@ -55,7 +55,7 @@ class Authorize
     {
         $user = Auth::user();
         foreach ($permissions as $permission) {
-            if (!in_array($permission, $user->permissions())) {
+            if (!in_array($permission, $user->getPermissions())) {
                 throw new Forbidden($permission);
             }
         }

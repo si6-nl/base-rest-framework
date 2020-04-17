@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 use Si6\Base\Utils\UniqueIdentity;
 use Throwable;
 

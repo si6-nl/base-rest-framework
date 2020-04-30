@@ -1,15 +1,12 @@
 <?php
 
-namespace Si6\Base\Traits;
+namespace Si6\Base\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Si6\Base\Exceptions\BaseException;
-use Si6\Base\Exceptions\MicroservicesException;
-use Si6\Base\Exceptions\PlatformException;
 use Si6\Base\Http\ResponseTrait;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

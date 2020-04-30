@@ -17,8 +17,12 @@ class AuthTokenService extends Microservices
     {
         $response = $this->internal()->post('users/auth');
 
-        $user = new User();
-        $user->fill((array)($response->data ?? []));
+        $user = null;
+
+        if (!empty($response->data)) {
+            $user = new User();
+            $user->fill((array)($response->data ?? []));
+        }
 
         return $user;
     }

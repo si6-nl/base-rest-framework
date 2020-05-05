@@ -21,6 +21,6 @@ class PaginationOptions
 
     public function applyQuery(Builder $query)
     {
-        return $query->paginate($this->pagination['limit'], ['*'], 'page', $this->pagination['page']);
+        return $query->paginate((int)$this->pagination['limit'], ['*'], 'page', (int)$this->pagination['page']);
     }
 }

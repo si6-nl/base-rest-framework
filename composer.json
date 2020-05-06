@@ -6,11 +6,10 @@
         "aws/aws-sdk-php": "^3.112",
         "bensampo/laravel-enum": "^1.26",
         "elasticsearch/elasticsearch": "^7.2",
-        "fideloper/proxy": "^4.0",
+        "fideloper/proxy": "^4.2",
         "guzzlehttp/guzzle": "^6.3",
-        "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0",
-        "league/csv": "^9.0",
+        "laravel/framework": "^7.0",
+        "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "^1.0"
     },
     "config": {

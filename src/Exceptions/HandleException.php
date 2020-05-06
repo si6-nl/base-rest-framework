@@ -2,13 +2,13 @@
 
 namespace Si6\Base\Exceptions;
 
-use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Si6\Base\Http\ResponseTrait;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 trait HandleException
 {
@@ -32,7 +32,7 @@ trait HandleException
         return $message;
     }
 
-    public function handleException($request, Exception $exception)
+    public function handleException($request, Throwable $exception)
     {
         if ($exception instanceof ValidationException) {
             $this->handleValidation($exception);
@@ -60,7 +60,7 @@ trait HandleException
         }
     }
 
-    public function handleExceptionReport(Exception $exception)
+    public function handleExceptionReport(Throwable $exception)
     {
         if ($exception instanceof PlatformException) {
             return $this->handlePlatformExceptionReport($exception);

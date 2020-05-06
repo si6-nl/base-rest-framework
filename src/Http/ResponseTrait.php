@@ -188,7 +188,7 @@ trait ResponseTrait
 
         if (app()->environment(['local', 'dev'])) {
             if ($this->debug) {
-                $response['debug'] = $this->debug;
+                $response['debug_exception'] = $this->debug;
             }
             if ($this->dev) {
                 $response['dev'] = $this->dev;

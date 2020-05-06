@@ -8,10 +8,19 @@
         "elasticsearch/elasticsearch": "^7.2",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
-        "laravel/framework": "^6.0",
+        "laravel/framework": "^7.0",
         "laravel/tinker": "^1.0",
         "league/csv": "^9.0",
         "league/flysystem-aws-s3-v3": "^1.0"
+    },
+    "require-dev": {
+        "lanin/laravel-api-debugger": "^3.5",
+        "barryvdh/laravel-ide-helper": "^2.6",
+        "fzaninotto/faker": "^1.9.1",
+        "mockery/mockery": "^1.3.1",
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5",
+        "si6/pre-commit-hook": "dev-v2_keirin250"
     },
     "config": {
         "optimize-autoloader": true,

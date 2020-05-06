@@ -19,16 +19,15 @@ trait Queryable
         $input = request()->query();
 
         foreach ($keys as $key) {
-
-            list($key, $default) = $this->splitDefault($key);
+            [$key, $default] = $this->splitDefault($key);
 
             $value = data_get($input, $key, null);
 
-            if (is_null($value)) {
+            if ($value === null) {
                 $value = $default;
             }
 
-            $method = 'query'.Str::studly($key);
+            $method = 'query' . Str::studly($key);
 
             if (method_exists($this, $method)) {
                 $value = $this->{$method}($value);
@@ -49,7 +48,7 @@ trait Queryable
             $value = $this->maxLimit;
         }
 
-        return (int) $value;
+        return (int)$value;
     }
 
     public function splitDefault($key)

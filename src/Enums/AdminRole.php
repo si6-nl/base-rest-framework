@@ -22,4 +22,5 @@ class AdminRole extends Enum
     const ACCOUNTING         = 'admin_accounting';
     const STADIUM_MANAGER    = 'admin_stadium_manager';
     const STADIUM_STAFF      = 'admin_stadium_staff';
+    const BLOG_WRITER        = 'admin_blog_writer';
 }

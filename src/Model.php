@@ -35,25 +35,36 @@ abstract class Model extends EloquentModel
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            /** @var Model $model */
-            if (!$model->getIncrementing() && $model->getKeyName()) {
-                $model->{$model->getKeyName()} = $model->generateId();
+        static::creating(
+            function ($model) {
+                /** @var Model $model */
+                if (!$model->getIncrementing() && $model->getKeyName()) {
+                    $model->{$model->getKeyName()} = $model->generateId();
+                }
+                self::handleActionByColumn($model);
             }
-            self::handleActionByColumn($model);
-        });
+        );
     }
 
+    /**
+     * @return string
+     */
     protected function getCreatedByColumn()
     {
         return self::CREATED_BY;
     }
 
+    /**
+     * @return string
+     */
     protected function getUpdatedByColumn()
     {
         return self::UPDATED_BY;
     }
 
+    /**
+     * @param Model $model
+     */
     protected static function handleActionByColumn(Model $model)
     {
         $id = null;
@@ -80,43 +91,66 @@ abstract class Model extends EloquentModel
      */
     protected function generateId()
     {
-        return DB::transaction(function () {
-            $next = $this->getNextSequence();
-            $id   = UniqueIdentity::id($next);
-            $this->updateSequence();
+        $next = $this->getNextSequence();
 
-            return $id;
-        });
+        return UniqueIdentity::id($next);
     }
 
-    private function getNextSequence()
+    /**
+     * @param $count
+     * @return array
+     */
+    protected function generateIds($count)
     {
-        $sequent = DB::table('entity_sequences')
-            ->select('next_value')
-            ->where('entity', $this->getTable())
-            ->lockForUpdate()
-            ->first();
+        $next = $this->getNextSequence($count);
 
-        if (isset($sequent->next_value)) {
-            return $sequent->next_value;
-        }
-
-        DB::table('entity_sequences')
-            ->insert([
-                'entity'     => $this->getTable(),
-                'next_value' => 1,
-            ]);
-
-        return 1;
+        return collect(range($next - $count + 1, $next))->map(function ($id) {
+            return UniqueIdentity::id($id);
+        })
+            ->toArray();
     }
 
-    private function updateSequence()
+    /**
+     * @param int $count
+     * @return mixed
+     */
+    private function getNextSequence($count = 1)
     {
-        DB::table('entity_sequences')
-            ->where('entity', $this->getTable())
-            ->increment('next_value');
+        return DB::transaction(
+            function () use ($count) {
+                $sequent = DB::table('entity_sequences')
+                    ->select('next_value')
+                    ->where('entity', $this->getTable())
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$sequent) {
+                    DB::table('entity_sequences')
+                        ->insert(
+                            [
+                                'entity'     => $this->getTable(),
+                                'next_value' => $count + 1,
+                            ]
+                        );
+
+                    return $count;
+                }
+
+                $nextValue = $sequent->next_value + $count;
+
+                DB::table('entity_sequences')
+                    ->where('entity', $this->getTable())
+                    ->update(['next_value' => $nextValue]);
+
+                return $nextValue - 1;
+            }
+        );
     }
 
+    /**
+     * @param DateTimeInterface $date
+     * @return string
+     */
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format(DATE_ISO8601);

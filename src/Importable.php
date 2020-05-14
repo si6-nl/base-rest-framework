@@ -119,11 +119,13 @@ trait Importable
      */
     protected function insertAttributes(Collection $attributes)
     {
-        $insert = $attributes->map(function ($item) {
+        $ids = $this->generateIds($attributes->count());
+
+        $insert = $attributes->map(function ($item, $index) use ($ids) {
             $item['created_at'] = $item['updated_at'] = Carbon::now();
 
             if (!$this->incrementing) {
-                $item['id'] = $this->generateId();
+                $item['id'] = $ids[$index];
             }
 
             return $item;

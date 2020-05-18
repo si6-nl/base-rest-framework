@@ -2,9 +2,9 @@
 
 namespace Si6\Base\Http;
 
-use Exception;
 use Illuminate\Http\Response;
 use Si6\Base\Exceptions\PlatformException;
+use Throwable;
 
 trait ResponseTrait
 {
@@ -66,7 +66,7 @@ trait ResponseTrait
         return $this;
     }
 
-    protected function setDebug(Exception $exception)
+    protected function setDebug(Throwable $exception)
     {
         $this->debug = [
             'message' => $exception->getMessage(),

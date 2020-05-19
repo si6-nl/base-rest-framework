@@ -57,11 +57,11 @@ class PlatformService extends ExternalService
         $response = $this->client->request($method, $url, $options);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        if ($url !== 'vote/buy' && !isset($data['result_code'])) {
+        if (!isset($data['result_code'])) {
             throw new PlatformException($options, null, $data['message'] ?? '', 900);
         }
 
-        if ($url !== 'vote/buy' && $data['result_code'] != 100) {
+        if ($data['result_code'] != 100) {
             Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
             $this->syncException($data);
         }

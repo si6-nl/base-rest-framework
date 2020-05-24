@@ -119,6 +119,10 @@ trait Importable
      */
     protected function insertAttributes(Collection $attributes)
     {
+        if ($attributes->isEmpty()) {
+            return;
+        }
+
         $ids = $this->generateIds($attributes->count());
 
         $insert = $attributes->map(function ($item, $index) use ($ids) {

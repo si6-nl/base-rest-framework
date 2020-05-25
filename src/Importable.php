@@ -125,7 +125,7 @@ trait Importable
 
         $ids = $this->generateIds($attributes->count());
 
-        $insert = $attributes->map(function ($item, $index) use ($ids) {
+        $insert = $attributes->values()->map(function ($item, $index) use ($ids) {
             $item['created_at'] = $item['updated_at'] = Carbon::now();
 
             if (!$this->incrementing) {

@@ -126,6 +126,16 @@ abstract class Criteria
         }
 
         if ($this->isValidCriteriaField($field, 'filter')) {
+            if (is_array($value)) {
+                $value = array_filter($value, function ($var) {
+                    return $var != null;
+                });
+            }
+
+            if (empty($value)) {
+                return;
+            }
+
             $value = is_array($value) ? $value : [$value];
             $query->whereIn("$this->table.$field", $value);
 
@@ -136,6 +146,18 @@ abstract class Criteria
             if (is_string($value)) {
                 $query->where("$this->table.$field", 'LIKE', "%$value%");
             }
+
+            return;
+        }
+
+        if ($this->isValidCriteriaField(Str::replaceLast('_from', "", $field), 'date')) {
+            $this->queryDateFrom($query, Str::replaceLast('_from', "", $field), $value);
+
+            return;
+        }
+
+        if ($this->isValidCriteriaField(Str::replaceLast('_to', "", $field), 'date')) {
+            $this->queryDateTo($query, Str::replaceLast('_to', "", $field), $value);
 
             return;
         }
@@ -151,7 +173,7 @@ abstract class Criteria
     protected function parseDate($value, $format, Closure $callback)
     {
         try {
-            $date = Carbon::createFromFormat($format, $value, 'Asia/Tokyo');
+            $date = Carbon::createFromFormat($format, $value, config('time.user_timezone'));
         } catch (Exception $exception) {
             $date = null;
         }

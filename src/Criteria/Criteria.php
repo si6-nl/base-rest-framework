@@ -128,7 +128,7 @@ abstract class Criteria
         if ($this->isValidCriteriaField($field, 'filter')) {
             if (is_array($value)) {
                 $value = array_filter($value, function ($var) {
-                    return $var != null;
+                    return $var !== null;
                 });
             }
 

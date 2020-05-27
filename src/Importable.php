@@ -116,11 +116,12 @@ trait Importable
 
     /**
      * @param Collection $attributes
+     * @return Collection
      */
     protected function insertAttributes(Collection $attributes)
     {
         if ($attributes->isEmpty()) {
-            return;
+            return $attributes;
         }
 
         $ids = $this->generateIds($attributes->count());
@@ -136,6 +137,8 @@ trait Importable
         });
 
         $this->insert($insert->toArray());
+
+        return $insert;
     }
 
     /**

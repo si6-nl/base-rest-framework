@@ -130,10 +130,9 @@ abstract class Criteria
                 $value = array_filter($value, function ($var) {
                     return $var !== null;
                 });
-            }
-
-            if (empty($value)) {
-                return;
+                if (empty($value)) {
+                    return;
+                }
             }
 
             $value = is_array($value) ? $value : [$value];

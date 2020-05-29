@@ -12,8 +12,8 @@ class PlatformException extends BaseException
     {
         parent::__construct();
         $this->statusCode = $statusCode ?: $this->statusCode;
-        $this->message    = $message ?: $this->message;
         $this->code       = $code ?: $this->code;
+        $this->message    = ($message ?: $this->message) . '_CODE_' . $this->code;
 
         if (PlatformResultCode::hasValue($this->code)) {
             $this->message = (string)PlatformResultCode::getKey($this->code);

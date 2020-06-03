@@ -96,6 +96,7 @@ class PlatformService extends ExternalService
 
         // TODO: handle error with result_code
 
+        Log::error("Response platform exception ", $exception);
         throw new PlatformException($data, $statusCode, $message, $exception['result_code'] ?? null);
     }
 }

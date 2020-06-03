@@ -30,8 +30,11 @@ class PlatformService extends ExternalService
         $this->options['headers'] = [
             'X-Api-Id'      => config('external.platform.api_id'),
             'X-Api-Key'     => config('external.platform.api_key'),
-            'Authorization' => config('external.platform.authorization'),
         ];
+
+        if (!in_array(app()->environment(), ['staging', 'production'])) {
+            $this->options['headers']['Authorization'] = config('external.platform.authorization');
+        }
     }
 
     /**

@@ -123,7 +123,7 @@ trait MultipleUpdatable
 
         foreach ($cases['query'] as $field => $case) {
             $case   = implode(' ', $case);
-            $sets[] = "`{$field}` = CASE {$case} END";
+            $sets[] = "`{$field}` = CASE {$case} ELSE `{$field}` END";
             foreach ($cases['bindings'][$field] as $values) {
                 foreach ($values as $value) {
                     $bindings[] = $value;

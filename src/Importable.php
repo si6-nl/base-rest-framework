@@ -135,7 +135,26 @@ trait Importable
 
             return $item;
         });
+        $count = $insert->max(function ($item) {
+            return count($item);
+        });
+        $fullItem = collect(
+            $insert->first(
+                function ($item) use ($count) {
+                    return count($item) == $count;
+                }
+            )
+        );
+        $insert->transform(function ($item) use ($fullItem) {
+            $missing = $fullItem->diffKeys($item);
+            if ($missing->isNotEmpty()) {
+                foreach ($missing->keys() as $key) {
+                    $item[$key] = DB::raw("DEFAULT($key)");
+                }
+            }
 
+            return $item;
+        });
         $this->insert($insert->toArray());
 
         return $insert;

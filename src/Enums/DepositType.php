@@ -22,4 +22,19 @@ class DepositType extends Enum
     const REFUND_EXPIRATION = 5;
     const EXPIRATION        = 6;
     const REFUND_RETURN     = 7;
+    const TICKET            = 8;
+
+    public static function typeForUserHistory()
+    {
+        return [
+            'credit_card',
+            'convenience_store',
+            'net_bank',
+            'atm',
+            'refund',
+            'refund_expiration',
+            'expiration',
+            'refund_return',
+        ];
+    }
 }

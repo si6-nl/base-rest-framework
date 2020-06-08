@@ -113,6 +113,14 @@ abstract class Criteria
 
     protected function isValidCriteria($field)
     {
+        $from = Str::replaceLast('_from', "", $field);
+        $to = Str::replaceLast('_to', "", $field);
+        if ((in_array($from, $this->flatten) || in_array($to, $this->flatten))
+            && !is_null($this->param[$field])
+        ) {
+            return true;
+        }
+
         return in_array($field, $this->flatten) && !is_null($this->param[$field]);
     }
 

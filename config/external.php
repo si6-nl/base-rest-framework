@@ -10,6 +10,9 @@ return [
             'https://nieqdb72z9.execute-api.ap-northeast-1.amazonaws.com/sitedev/api'
         ),
         'oldest_synced_date' => '20190415',
-        'localized_lang' => 'jp',
+        'localized_lang'     => 'jp',
+    ],
+    'ai'       => [
+        'base_uri' => env('EXTERNAL_AI_BASE_URI', 'https://kai-dev.bla-one.net'),
     ],
 ];

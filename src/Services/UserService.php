@@ -46,4 +46,11 @@ class UserService extends Microservices
 
         return $response->data ?? null;
     }
+
+    public function pluck(array $param)
+    {
+        $response = $this->internal()->get('users/pluck', $param);
+
+        return $response->data ?? null;
+    }
 }

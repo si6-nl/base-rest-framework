@@ -220,4 +220,25 @@ abstract class Criteria
         $time = $this->parseEndOfDate($value);
         $this->queryCriteriaDate($query, $field, '<=', $time);
     }
+
+    protected function getTimeOffset()
+    {
+        $appOffset    = now()->format('P');
+        $userTimezone = config('time.user_timezone');
+        $userOffset   = now($userTimezone)->format('P');
+
+        return [$appOffset, $userOffset];
+    }
+
+    protected function queryCriteriaYear($query, $field, $value)
+    {
+        [$appOffset, $userOffset] = $this->getTimeOffset();
+        $query->whereYear(DB::raw("CONVERT_TZ(`$field`, '$appOffset', '$userOffset')"), $value);
+    }
+
+    protected function queryCriteriaMonth($query, $field, $value)
+    {
+        [$appOffset, $userOffset] = $this->getTimeOffset();
+        $query->whereMonth(DB::raw("CONVERT_TZ(`$field`, '$appOffset', '$userOffset')"), $value);
+    }
 }

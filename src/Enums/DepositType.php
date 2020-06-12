@@ -23,6 +23,8 @@ class DepositType extends Enum
     const EXPIRATION        = 6;
     const REFUND_RETURN     = 7;
     const TICKET            = 8;
+    const GRANTED_BY_ADMIN  = 9;
+    const EXPIRED_BY_ADMIN  = 10;
 
     public static function typeForUserHistory()
     {
@@ -35,6 +37,9 @@ class DepositType extends Enum
             'refund_expiration',
             'expiration',
             'refund_return',
+            'ticket',
+            'granted_by_admin',
+            'expired_by_admin',
         ];
     }
 }

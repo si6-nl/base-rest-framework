@@ -37,7 +37,6 @@ class DepositType extends Enum
             'refund_expiration',
             'expiration',
             'refund_return',
-            'ticket',
             'granted_by_admin',
             'expired_by_admin',
         ];

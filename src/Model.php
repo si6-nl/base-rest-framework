@@ -155,4 +155,14 @@ abstract class Model extends EloquentModel
     {
         return $date->format(DATE_ISO8601);
     }
+
+    /**
+     * @return mixed
+     */
+    public static function table()
+    {
+        $string = get_called_class();
+
+        return (new $string())->getTable();
+    }
 }

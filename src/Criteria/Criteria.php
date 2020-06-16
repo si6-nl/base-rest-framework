@@ -205,7 +205,7 @@ abstract class Criteria
     protected function queryCriteriaDate(Builder $query, $field, $operator, $time)
     {
         if ($time) {
-            $query->where($field, $operator, $time);
+            $query->where("$this->table.$field", $operator, $time);
         }
     }
 
@@ -233,12 +233,12 @@ abstract class Criteria
     protected function queryCriteriaYear($query, $field, $value)
     {
         [$appOffset, $userOffset] = $this->getTimeOffset();
-        $query->whereYear(DB::raw("CONVERT_TZ(`$field`, '$appOffset', '$userOffset')"), $value);
+        $query->whereYear(DB::raw("CONVERT_TZ(". $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"), $value);
     }
 
     protected function queryCriteriaMonth($query, $field, $value)
     {
         [$appOffset, $userOffset] = $this->getTimeOffset();
-        $query->whereMonth(DB::raw("CONVERT_TZ(`$field`, '$appOffset', '$userOffset')"), $value);
+        $query->whereMonth(DB::raw("CONVERT_TZ(". $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"), $value);
     }
 }

@@ -23,6 +23,7 @@ class SortOptions
 
     public function __construct(array $param = [])
     {
+        $param = $param ?: request()->query();
         $this->setParam($param);
     }
 

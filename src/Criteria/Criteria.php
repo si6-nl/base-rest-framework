@@ -230,15 +230,35 @@ abstract class Criteria
         return [$appOffset, $userOffset];
     }
 
-    protected function queryCriteriaYear($query, $field, $value)
+    /**
+     * @param Builder|\Illuminate\Database\Query\Builder $query
+     * @param $field
+     * @param $value
+     * @param string $boolean
+     */
+    protected function queryCriteriaYear($query, $field, $value, $boolean = 'and')
     {
         [$appOffset, $userOffset] = $this->getTimeOffset();
-        $query->whereYear(DB::raw("CONVERT_TZ(". $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"), $value);
+        $query->whereYear(
+            DB::raw("CONVERT_TZ(" . $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"),
+            $value,
+            $boolean
+        );
     }
 
-    protected function queryCriteriaMonth($query, $field, $value)
+    /**
+     * @param Builder|\Illuminate\Database\Query\Builder $query
+     * @param $field
+     * @param $value
+     * @param string $boolean
+     */
+    protected function queryCriteriaMonth($query, $field, $value, $boolean = 'and')
     {
         [$appOffset, $userOffset] = $this->getTimeOffset();
-        $query->whereMonth(DB::raw("CONVERT_TZ(". $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"), $value);
+        $query->whereMonth(
+            DB::raw("CONVERT_TZ(" . $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"),
+            $value,
+            $boolean
+        );
     }
 }

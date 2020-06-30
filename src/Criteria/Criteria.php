@@ -238,11 +238,11 @@ abstract class Criteria
      */
     protected function queryCriteriaYear($query, $field, $value, $boolean = 'and')
     {
+        $method = $boolean === 'and' ? 'whereYear' : 'orWhereYear';
         [$appOffset, $userOffset] = $this->getTimeOffset();
-        $query->whereYear(
+        $query->{$method}(
             DB::raw("CONVERT_TZ(" . $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"),
-            $value,
-            $boolean
+            $value
         );
     }
 
@@ -254,11 +254,11 @@ abstract class Criteria
      */
     protected function queryCriteriaMonth($query, $field, $value, $boolean = 'and')
     {
+        $method = $boolean === 'and' ? 'whereMonth' : 'orWhereMonth';
         [$appOffset, $userOffset] = $this->getTimeOffset();
-        $query->whereMonth(
+        $query->{$method}(
             DB::raw("CONVERT_TZ(" . $this->getFullTableName() . ".$field, '$appOffset', '$userOffset')"),
-            $value,
-            $boolean
+            $value
         );
     }
 }

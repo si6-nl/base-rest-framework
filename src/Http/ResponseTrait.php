@@ -193,6 +193,13 @@ trait ResponseTrait
         return $this->getResponse();
     }
 
+    public function passThrough($data)
+    {
+        $this->response = $data;
+
+        return $this->getResponse();
+    }
+
     public function getResponse()
     {
         $response = $this->response;

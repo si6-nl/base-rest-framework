@@ -34,7 +34,7 @@ trait ResponseTrait
 
     public function addResponseData($key, $data)
     {
-        $this->response[$key] = array_merge($this->response[$key] ?? [], $data);
+        $this->response[$key] = $data;
 
         return $this;
     }
@@ -48,21 +48,21 @@ trait ResponseTrait
 
     public function addData(string $key, $data)
     {
-        $this->response['data'][$key] = array_merge($this->response['data'][$key] ?? [], $data);
+        $this->response['data'][$key] = $data;
 
         return $this;
     }
 
     public function addIncluded(string $key, $data)
     {
-        $this->response['included'][$key] = array_merge($this->response['included'][$key] ?? [], $data);
+        $this->included[$key] = $data;
 
         return $this;
     }
 
     public function setIncluded($included)
     {
-        $this->response['included'] = $included;
+        $this->included = $included;
 
         return $this;
     }
@@ -203,6 +203,10 @@ trait ResponseTrait
     public function getResponse()
     {
         $response = $this->response;
+
+        if (!empty($this->included)) {
+            $response['included'] = $this->included;
+        }
 
         if (!empty($this->errors)) {
             // Update default status if it's not set to error

@@ -4,10 +4,13 @@ namespace Si6\Base\Http;
 
 use Illuminate\Http\Response;
 use Si6\Base\Exceptions\PlatformException;
+use Si6\Base\Resources\PaginatedResource;
 use Throwable;
 
 trait ResponseTrait
 {
+    protected $response = [];
+
     protected $data = [];
 
     protected $included = [];
@@ -22,37 +25,51 @@ trait ResponseTrait
 
     protected $dev = null;
 
+    public function setResponseData($key, $data)
+    {
+        $this->response[$key] = $data;
+
+        return $this;
+    }
+
+    public function addResponseData($key, $data)
+    {
+        $this->response[$key] = array_merge($this->response[$key] ?? [], $data);
+
+        return $this;
+    }
+
     public function setData($data)
     {
-        $this->data = $data;
+        $this->setResponseData('data', $data);
 
         return $this;
     }
 
     public function addData(string $key, $data)
     {
-        $this->data[$key] = $data;
+        $this->response['data'][$key] = array_merge($this->response['data'][$key] ?? [], $data);
 
         return $this;
     }
 
     public function addIncluded(string $key, $data)
     {
-        $this->included[$key] = $data;
+        $this->response['included'][$key] = array_merge($this->response['included'][$key] ?? [], $data);
 
         return $this;
     }
 
     public function setIncluded($included)
     {
-        $this->included = $included;
+        $this->response['included'] = $included;
 
         return $this;
     }
 
     public function addDevData(string $key, $data)
     {
-        $this->dev[$key] = $data;
+        $this->response['dev'][$key] = array_merge($this->response['dev'][$key] ?? [], $data);
 
         return $this;
     }
@@ -79,7 +96,6 @@ trait ResponseTrait
         if ($exception instanceof PlatformException) {
             $this->debug['request'] = request()->all();
         }
-
     }
 
     protected function handleMessage($message)
@@ -144,8 +160,16 @@ trait ResponseTrait
 
     public function success($data, $statusCode = 200)
     {
-        $this->setStatusCode($statusCode)
-            ->setData($data);
+        $this->setStatusCode($statusCode);
+
+        if ($data instanceof PaginatedResource) {
+            $resolve = $data->resolve();
+            $this->setResponseData('data', $resolve['data']);
+            $this->setResponseData('links', $resolve['links']);
+            $this->setResponseData('meta', $resolve['meta']);
+        } else {
+            $this->setData($data);
+        }
 
         return $this->getResponse();
     }
@@ -171,7 +195,7 @@ trait ResponseTrait
 
     public function getResponse()
     {
-        $response = [];
+        $response = $this->response;
 
         if (!empty($this->errors)) {
             // Update default status if it's not set to error
@@ -179,11 +203,6 @@ trait ResponseTrait
                 $this->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
             $response['errors'] = $this->errors;
-        } else {
-            $response['data'] = $this->data;
-            if (!empty($this->included)) {
-                $response['included'] = $this->included;
-            }
         }
 
         if (app()->environment(['local', 'dev'])) {

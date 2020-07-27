@@ -8,6 +8,7 @@
         "elasticsearch/elasticsearch": "^7.2",
         "fideloper/proxy": "^4.2",
         "guzzlehttp/guzzle": "^6.3",
+        "laravel-doctrine/orm": "^1.6",
         "laravel/framework": "^7.0",
         "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "^1.0"

@@ -3,6 +3,7 @@
 namespace Si6\Base\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest as HttpFormRequest;
+use Si6\Base\Infrastructure\StrictObjectManager;
 
 abstract class FormRequest extends HttpFormRequest
 {
@@ -13,6 +14,22 @@ abstract class FormRequest extends HttpFormRequest
     protected $requiredWith = [];
 
     protected $nullable = true;
+
+    /**
+     * @var StrictObjectManager
+     */
+    protected $entityManager;
+
+    /**
+     * FormRequest constructor.
+     *
+     * @param StrictObjectManager $entityManager
+     */
+    public function __construct(StrictObjectManager $entityManager)
+    {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+    }
 
     protected function notRequire()
     {

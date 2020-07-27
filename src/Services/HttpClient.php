@@ -26,39 +26,39 @@ trait HttpClient
         $this->options['base_uri'] = $this->baseUri();
     }
 
-    protected function get($url, $data = [], $options = [])
+    public function get($url, $data = [], $options = [])
     {
         return $this->query('GET', $url, $data, $options);
     }
 
-    protected function post($url, $data = [], $options = [])
+    public function post($url, $data = [], $options = [])
     {
         return $this->json('POST', $url, $data, $options);
     }
 
-    protected function put($url, $data = [], $options = [])
+    public function put($url, $data = [], $options = [])
     {
         return $this->json('PUT', $url, $data, $options);
     }
 
-    protected function patch($url, $data = [], $options = [])
+    public function patch($url, $data = [], $options = [])
     {
         return $this->json('PATCH', $url, $data, $options);
     }
 
-    protected function delete($url, $data = [], $options = [])
+    public function delete($url, $data = [], $options = [])
     {
         return $this->query('DELETE', $url, $data, $options);
     }
 
-    protected function query($method, $url, $data, $options)
+    public function query($method, $url, $data, $options)
     {
         $options = array_merge($options, ['query' => $data]);
 
         return $this->request($method, $url, $options);
     }
 
-    protected function json($method, $url, $data, $options)
+    public function json($method, $url, $data, $options)
     {
         $options = array_merge($options, ['json' => $data]);
 

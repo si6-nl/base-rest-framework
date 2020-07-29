@@ -40,7 +40,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $this->registerStorageProvider();
         $this->registerExternalService();
         $this->registerBettingService();
-        $this->registerDomainService();
+//        $this->registerDomainService();
         $this->mergeConfigFrom(__DIR__ . '/../../config/time.php', 'time');
     }
 
@@ -107,7 +107,7 @@ class Si6BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Type::overrideType('datetime', CarbonType::class);
+//        Type::overrideType('datetime', CarbonType::class);
         $router = $this->app->make(Router::class);
         $router->aliasMiddleware('versioning', Versioning::class);
         $router->aliasMiddleware('auth', Authenticate::class);

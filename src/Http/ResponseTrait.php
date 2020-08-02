@@ -165,7 +165,6 @@ trait ResponseTrait
         if ($data instanceof PaginatedResource) {
             $resolve = $data->resolve();
             $this->setResponseData('data', $resolve['data']);
-            $this->setResponseData('links', $resolve['links']);
             $this->setResponseData('meta', $resolve['meta']);
         } else {
             $this->setData($data);

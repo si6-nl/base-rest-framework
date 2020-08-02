@@ -13,24 +13,7 @@ class PaginatedResource extends JsonResource
 
         return [
             'data'  => $this->resource->getCollection(),
-            'links' => $this->paginationLinks($paginated),
             'meta'  => $this->meta($paginated),
-        ];
-    }
-
-    /**
-     * Get the pagination links for the response.
-     *
-     * @param array $paginated
-     * @return array
-     */
-    protected function paginationLinks($paginated)
-    {
-        return [
-            'first' => $paginated['first_page_url'] ?? null,
-            'last'  => $paginated['last_page_url'] ?? null,
-            'prev'  => $paginated['prev_page_url'] ?? null,
-            'next'  => $paginated['next_page_url'] ?? null,
         ];
     }
 
@@ -46,6 +29,7 @@ class PaginatedResource extends JsonResource
             $paginated,
             [
                 'data',
+                'path',
                 'first_page_url',
                 'last_page_url',
                 'prev_page_url',

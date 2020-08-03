@@ -2,8 +2,6 @@
 
 namespace Si6\Base\Providers;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Types\Type;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -15,16 +13,12 @@ use Si6\Base\Http\Middleware\Authenticate;
 use Si6\Base\Http\Middleware\Authorize;
 use Si6\Base\Http\Middleware\BeforeResponse;
 use Si6\Base\Http\Middleware\CheckForMaintenanceMode;
+use Si6\Base\Http\Middleware\LanguageCode;
 use Si6\Base\Http\Middleware\TrimStrings;
 use Si6\Base\Http\Middleware\TrustProxies;
 use Si6\Base\Http\Middleware\Unacceptable;
 use Si6\Base\Http\Middleware\Unsupported;
 use Si6\Base\Http\Middleware\Versioning;
-use Si6\Base\Infrastructure\CarbonType;
-use Si6\Base\Infrastructure\DoctrineStrictObjectManager;
-use Si6\Base\Infrastructure\MicroserviceDispatcher;
-use Si6\Base\Infrastructure\ScheduleMicroserviceDispatcher;
-use Si6\Base\Infrastructure\StrictObjectManager;
 
 class Si6BaseServiceProvider extends ServiceProvider
 {
@@ -40,14 +34,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $this->registerStorageProvider();
         $this->registerExternalService();
         $this->registerBettingService();
-//        $this->registerDomainService();
         $this->mergeConfigFrom(__DIR__ . '/../../config/time.php', 'time');
-    }
-
-    protected function registerDomainService()
-    {
-        $this->app->singleton(StrictObjectManager::class, DoctrineStrictObjectManager::class);
-        $this->app->bind(MicroserviceDispatcher::class, ScheduleMicroserviceDispatcher::class);
     }
 
     /**
@@ -62,6 +49,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $kernel->prependMiddleware(TrustProxies::class);
         $kernel->prependMiddleware(ConvertEmptyStringsToNull::class);
 
+        $kernel->prependMiddleware(LanguageCode::class);
         $kernel->prependMiddleware(Unsupported::class);
         $kernel->prependMiddleware(Unacceptable::class);
         $kernel->prependMiddleware(BeforeResponse::class);
@@ -103,11 +91,9 @@ class Si6BaseServiceProvider extends ServiceProvider
 
     /**
      * @throws BindingResolutionException
-     * @throws DBALException
      */
     public function boot()
     {
-//        Type::overrideType('datetime', CarbonType::class);
         $router = $this->app->make(Router::class);
         $router->aliasMiddleware('versioning', Versioning::class);
         $router->aliasMiddleware('auth', Authenticate::class);

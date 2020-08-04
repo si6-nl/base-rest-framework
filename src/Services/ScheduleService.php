@@ -2,8 +2,6 @@
 
 namespace Si6\Base\Services;
 
-use Si6\Base\DataTransferObjects\FireEventDTO;
-
 class ScheduleService extends Microservices
 {
     use SingletonInstance;
@@ -14,10 +12,10 @@ class ScheduleService extends Microservices
     }
 
     /**
-     * @param FireEventDTO[] $events
+     * @param array $events
      */
     public function fireEvents(array $events)
     {
-        $this->post('schedules/events', ['events' => $events]);
+        $this->disableSyncException()->post('schedules/events', ['events' => $events]);
     }
 }

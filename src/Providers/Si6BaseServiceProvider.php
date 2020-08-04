@@ -19,6 +19,8 @@ use Si6\Base\Http\Middleware\TrustProxies;
 use Si6\Base\Http\Middleware\Unacceptable;
 use Si6\Base\Http\Middleware\Unsupported;
 use Si6\Base\Http\Middleware\Versioning;
+use Si6\Base\Infrastructure\MicroserviceDispatcher;
+use Si6\Base\Infrastructure\ScheduleMicroserviceDispatcher;
 
 class Si6BaseServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $this->registerExternalService();
         $this->registerBettingService();
         $this->mergeConfigFrom(__DIR__ . '/../../config/time.php', 'time');
+        $this->app->bind(MicroserviceDispatcher::class, ScheduleMicroserviceDispatcher::class);
     }
 
     /**

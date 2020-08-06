@@ -28,6 +28,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         ValidationException::class,
         BusinessException::class,
+        ResourceNotFound::class,
     ];
 
     /**

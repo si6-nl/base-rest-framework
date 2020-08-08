@@ -15,7 +15,6 @@ use Si6\Base\Http\Middleware\BeforeResponse;
 use Si6\Base\Http\Middleware\CheckForMaintenanceMode;
 use Si6\Base\Http\Middleware\LanguageCode;
 use Si6\Base\Http\Middleware\TrimStrings;
-use Si6\Base\Http\Middleware\TrustProxies;
 use Si6\Base\Http\Middleware\Unacceptable;
 use Si6\Base\Http\Middleware\Unsupported;
 use Si6\Base\Http\Middleware\Versioning;
@@ -49,7 +48,6 @@ class Si6BaseServiceProvider extends ServiceProvider
 
         $kernel->prependMiddleware(TrimStrings::class);
         $kernel->prependMiddleware(CheckForMaintenanceMode::class);
-        $kernel->prependMiddleware(TrustProxies::class);
         $kernel->prependMiddleware(ConvertEmptyStringsToNull::class);
 
         $kernel->prependMiddleware(LanguageCode::class);

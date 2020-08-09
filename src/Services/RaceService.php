@@ -37,4 +37,24 @@ class RaceService extends Microservices
 
         return $response->data ?? null;
     }
+
+    /**
+     * @param $syncEntryId
+     * @return mixed|null
+     */
+    public function detailBySyncEntryId($syncEntryId)
+    {
+        $response = $this->get("internal/races/entries/$syncEntryId");
+
+        return $response->data ?? null;
+    }
+
+    /**
+     * @param $id
+     * @param array $attributes
+     */
+    public function updateDetail($id, array $attributes)
+    {
+        $this->put("internal/races/$id", $attributes);
+    }
 }

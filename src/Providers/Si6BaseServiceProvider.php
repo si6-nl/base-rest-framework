@@ -13,6 +13,7 @@ use Si6\Base\Http\Middleware\Authenticate;
 use Si6\Base\Http\Middleware\Authorize;
 use Si6\Base\Http\Middleware\BeforeResponse;
 use Si6\Base\Http\Middleware\CheckForMaintenanceMode;
+use Si6\Base\Http\Middleware\ClientPlatform;
 use Si6\Base\Http\Middleware\LanguageCode;
 use Si6\Base\Http\Middleware\TrimStrings;
 use Si6\Base\Http\Middleware\Unacceptable;
@@ -51,6 +52,7 @@ class Si6BaseServiceProvider extends ServiceProvider
         $kernel->prependMiddleware(ConvertEmptyStringsToNull::class);
 
         $kernel->prependMiddleware(LanguageCode::class);
+        $kernel->prependMiddleware(ClientPlatform::class);
         $kernel->prependMiddleware(Unsupported::class);
         $kernel->prependMiddleware(Unacceptable::class);
         $kernel->prependMiddleware(BeforeResponse::class);

@@ -5,6 +5,7 @@ namespace Si6\Base;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Si6\Base\Enums\AdminRole;
+use Si6\Base\Enums\UserStatus;
 
 class User extends Model implements AuthenticatableContract
 {
@@ -37,5 +38,10 @@ class User extends Model implements AuthenticatableContract
         $adminRoles = AdminRole::getValues();
 
         return $roles->intersect($adminRoles)->isNotEmpty();
+    }
+
+    public function isMember()
+    {
+        return in_array($this->getAttribute('status'), [UserStatus::IDENTITY_VERIFIED, UserStatus::OFFICIAL]);
     }
 }

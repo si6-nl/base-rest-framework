@@ -129,7 +129,7 @@ trait Importable
         $insert = $attributes->values()->map(function ($item, $index) use ($ids) {
             $item['created_at'] = $item['updated_at'] = Carbon::now();
 
-            if (!$this->incrementing) {
+            if (!$this->incrementing && empty($item['id'])) {
                 $item['id'] = $ids[$index];
             }
 

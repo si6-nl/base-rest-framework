@@ -65,8 +65,10 @@ class PlatformService extends ExternalService
         }
 
         if ($data['result_code'] != 100) {
-            Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
-            $this->syncException($data);
+            if ($data['result_code'] != 711 || $url !== 'portal/vote/race_tips') {
+                Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
+                $this->syncException($data);
+            }
         }
 
         Log::info('SEND_REQUEST_TO_PLATFORM_SUCCEED', $data);

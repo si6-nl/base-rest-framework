@@ -22,8 +22,9 @@ abstract class Microservices
     protected function setDefaultHeaders()
     {
         $this->options['headers'] = [
-            'Content-type' => 'application/json',
-            'Accept'       => 'application/json',
+            'Content-type'    => 'application/json',
+            'Accept'          => 'application/json',
+            'Accept-Language' => request()->header('Accept-Language'),
         ];
     }
 

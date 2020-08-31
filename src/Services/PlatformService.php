@@ -47,15 +47,7 @@ class PlatformService extends ExternalService
      */
     protected function handleRequest($method, $url, $options)
     {
-        $url     = trim($url, '/');
-        $logOptions = $options = array_merge($this->options, $options);
-        unset($logOptions['headers']);
-
-        Log::info('SEND_REQUEST_TO_PLATFORM', [
-            'method'    => $method,
-            'url'       => $url,
-            'options'   => $logOptions
-        ]);
+        $url = trim($url, '/');
 
         $response = $this->client->request($method, $url, $options);
 
@@ -64,14 +56,10 @@ class PlatformService extends ExternalService
             throw new PlatformException($options, null, $data['message'] ?? '', 900);
         }
 
-        if ($data['result_code'] != 100) {
-            if ($url !== 'portal/vote/race_tips') {
-                Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
-                $this->syncException($data);
-            }
+        if ($data['result_code'] == 900) {
+            Log::info('SEND_REQUEST_TO_PLATFORM_FAILED', $data);
+            $this->syncException($data);
         }
-
-        Log::info('SEND_REQUEST_TO_PLATFORM_SUCCEED', $data);
 
         return $data;
     }
@@ -99,9 +87,82 @@ class PlatformService extends ExternalService
         $message    = $exception instanceof RequestException ? $exception->getMessage() : '';
         $data       = null;
 
-        // TODO: handle error with result_code
-
         Log::error("Response platform exception ", $exception);
         throw new PlatformException($data, $statusCode, $message, $exception['result_code'] ?? null);
+    }
+
+    /**
+     * @param array $param
+     * @return mixed
+     */
+    public function getEvents(array $param)
+    {
+        $query = [];
+
+        if (!empty($param['sync_event_id'])) {
+            $query = ['hold_id' => $param['sync_event_id']];
+        } elseif (!empty($param['year']) && !empty($param['month'])) {
+            $query = [
+                'year' => $param['year'],
+                'month' => $param['month'],
+            ];
+        }
+
+        if (empty($query)) {
+            return null;
+        }
+
+        return $this->get('portal/calendar/seller', $query);
+    }
+
+    /**
+     * @param array $param
+     * @return mixed
+     */
+    public function getEventPlayers(array $param)
+    {
+        return $this->get('portal/mediator_player', ['hold_id' => $param['sync_event_id']]);
+    }
+
+    /**
+     * @param array $param
+     * @return mixed
+     */
+    public function getRaceEntryTable(array $param)
+    {
+        return $this->get(
+            'portal/race_table/seller',
+            [
+                'hold_id'       => $param['sync_event_id'],
+                'hold_id_daily' => $param['sync_event_day_id'],
+            ]
+        );
+    }
+
+    /**
+     * @param array $param
+     * @return mixed
+     */
+    public function getRaceDetail(array $param)
+    {
+        return $this->get('portal/race_detail', ['entries_id' => $param['sync_entry_id']]);
+    }
+
+    /**
+     * @param array $param
+     * @return mixed
+     */
+    public function getRaceResult(array $param)
+    {
+        return $this->get('portal/race_result', ['entries_id' => $param['sync_entry_id']]);
+    }
+
+    /**
+     * @param array $param
+     * @return mixed
+     */
+    public function getEventTrial(array $param)
+    {
+        return $this->get('portal/time_trial_result', ['hold_id' => $param['sync_event_id']]);
     }
 }

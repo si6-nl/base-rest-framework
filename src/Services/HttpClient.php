@@ -4,6 +4,7 @@ namespace Si6\Base\Services;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 
 trait HttpClient
 {
@@ -53,6 +54,7 @@ trait HttpClient
 
     public function query($method, $url, $data, $options)
     {
+        Log::info('GUZZLE_REQUEST', [$method, $url, $data]);
         $options = array_merge($options, ['query' => $data]);
 
         return $this->request($method, $url, $options);
@@ -60,6 +62,7 @@ trait HttpClient
 
     public function json($method, $url, $data, $options)
     {
+        Log::info('GUZZLE_REQUEST', [$method, $url, $data]);
         $options = array_merge($options, ['json' => $data]);
 
         return $this->request($method, $url, $options);
@@ -75,7 +78,9 @@ trait HttpClient
     {
         try {
             $data = $this->handleRequest($method, $url, $options);
+            Log::info('GUZZLE_RESPONSE', [$method, $url, $data]);
         } catch (RequestException $exception) {
+            Log::error($exception->getMessage());
             $data = $this->handleException($exception);
         }
 

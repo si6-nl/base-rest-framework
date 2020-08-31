@@ -33,7 +33,7 @@ class RaceService extends Microservices
      */
     public function detail(array $param = [])
     {
-        $response = $this->internal()->get("races/detail", $param);
+        $response = $this->get("internal/races/detail", $param);
 
         return $response->data ?? null;
     }
@@ -47,6 +47,50 @@ class RaceService extends Microservices
         $response = $this->get("internal/races/entries/$syncEntryId");
 
         return $response->data ?? null;
+    }
+
+    /**
+     * @param $syncEventDayId
+     * @return mixed|null
+     */
+    public function detailDayBySyncEventDayId($syncEventDayId)
+    {
+        $response = $this->get("internal/days/sync/$syncEventDayId");
+
+        return $response->data ?? null;
+    }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    public function getSyncEventIds(array $param)
+    {
+        $response = $this->get('internal/events/sync/ids', $param);
+
+        return $response->data ?? [];
+    }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    public function getSyncEventDayIds(array $param)
+    {
+        $response = $this->get('internal/days/sync/ids', $param);
+
+        return $response->data ?? [];
+    }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    public function getSyncEntryIds(array $param)
+    {
+        $response = $this->get('internal/races/sync/ids', $param);
+
+        return $response->data ?? [];
     }
 
     /**

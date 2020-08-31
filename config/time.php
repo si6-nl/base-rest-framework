@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'user_timezone' => 'Asia/Tokyo' // only apply when get data, don't use this tz to save data.
+    'user_timezone'     => 'Asia/Tokyo', // only apply when get data, don't use this tz to save data.
+    'platform_timezone' => 'Asia/Tokyo',
 ];

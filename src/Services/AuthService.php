@@ -13,7 +13,7 @@ class AuthService extends Microservices
 
     public function getUsers(array $param)
     {
-        $response = $this->internal()->get('users', $param);
+        $response = $this->post('internal/users', $param);
 
         return $response->data ?? [];
     }

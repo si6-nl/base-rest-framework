@@ -115,4 +115,15 @@ class VoteType extends Enum
             ]
         );
     }
+
+    public static function isBracket($type)
+    {
+        return in_array(
+            $type,
+            [
+                VoteType::BRACKET_EXACTA,
+                VoteType::BRACKET_QUINELLA,
+            ]
+        );
+    }
 }

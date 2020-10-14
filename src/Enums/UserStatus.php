@@ -24,4 +24,14 @@ class UserStatus extends Enum
     const LEFT                        = 6;
     const DELETED                     = 7;
     const NEWBIE_MUST_CHANGE_PASSWORD = 8;
+
+    public static function cannotLogin()
+    {
+        return [
+            self::SUSPENDED,
+            self::EXPELLED,
+            self::LEFT,
+            self::DELETED,
+        ];
+    }
 }

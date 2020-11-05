@@ -68,6 +68,11 @@ class BeforeResponse
             return;
         }
 
+        $data = $request->all();
+        if (isset($data['password'])) {
+            unset($data['password']);
+        }
+
         $this->dispatcher->dispatch(
             [
                 new AdminActivity(

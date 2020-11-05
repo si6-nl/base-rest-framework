@@ -25,6 +25,7 @@ abstract class Microservices
             'Content-type'    => 'application/json',
             'Accept'          => 'application/json',
             'Accept-Language' => request()->header('Accept-Language'),
+            'Request-Context' => 'internal',
         ];
     }
 

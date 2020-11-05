@@ -79,7 +79,7 @@ class BeforeResponse
                     auth()->id(),
                     $request->method(),
                     $request->path(),
-                    $request->all()
+                    $data
                 ),
             ]
         );

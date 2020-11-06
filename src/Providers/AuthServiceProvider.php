@@ -15,7 +15,11 @@ class AuthServiceProvider extends ServiceProvider
             /** @var AuthTokenService $authService */
             $authService = app(AuthTokenService::class)->getInstance();
 
-            $user = $authService->authenticate();
+            $user = null;
+
+            if (request()->header('Authorization')) {
+                $user = $authService->authenticate();
+            }
 
             return new AccessTokenGuard($user);
         });

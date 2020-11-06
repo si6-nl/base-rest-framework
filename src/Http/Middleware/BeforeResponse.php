@@ -52,10 +52,6 @@ class BeforeResponse
     {
         /** @var Request $request */
 
-        if (!$request->header('Authorization')) {
-            return;
-        }
-
         if (!auth()->user() || !auth()->user()->isAdmin()) {
             return;
         }

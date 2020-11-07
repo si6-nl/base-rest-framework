@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 trait MultipleUpdateWithJoin
 {
-    protected function multipleUpdateWithJoin($data, $indexKeys)
+    protected function multipleUpdateWithJoin($attibutes, $indexKeys)
     {
         $table = DB::getTablePrefix() . $this->getTable();
 
@@ -14,17 +14,19 @@ trait MultipleUpdateWithJoin
         $bindings = [];
         $sets     = [];
 
-        foreach ($data as $attributes) {
+        foreach ($attibutes as $attribute) {
             $selects = [];
-            foreach ($attributes as $field => $attribute) {
+            foreach ($attribute as $field => $value) {
                 $select     = $attribute === null ? 'null' : '?';
                 $selects[]  = !empty($joins) ? $select : "$select AS $field";
-                $bindings[] = $attribute;
+                if ($value !== null) {
+                    $bindings[] = $value;
+                }
             }
             $joins[] = 'SELECT ' . implode(', ', $selects);
 
             if (!$sets) {
-                foreach ($attributes as $field => $attribute) {
+                foreach ($attribute as $field => $value) {
                     $sets[] = "t.$field = j.$field";
                 }
             }

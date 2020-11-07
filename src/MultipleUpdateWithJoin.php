@@ -35,6 +35,10 @@ trait MultipleUpdateWithJoin
             $mappingKeys[] = "((t.`$key` = j.`$key`) OR (t.`$key` IS NULL AND j.`$key` IS NULL))";
         }
 
+        if (!$joins || !$mappingKeys || !$sets) {
+            return;
+        }
+
         $sets[]     = "`updated_at` = ?";
         $bindings[] = now();
 
@@ -45,6 +49,6 @@ trait MultipleUpdateWithJoin
         $query = /** @lang text */
             "UPDATE `{$table}` t JOIN ({$joins}) j ON {$mappingKeys} SET {$sets}";
 
-        return DB::update($query, $bindings);
+        DB::update($query, $bindings);
     }
 }

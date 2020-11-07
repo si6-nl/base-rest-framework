@@ -18,7 +18,7 @@ trait MultipleUpdateWithJoin
             $selects = [];
             foreach ($attribute as $field => $value) {
                 $select     = $value === null ? 'null' : '?';
-                $selects[]  = !empty($joins) ? "$select" : "$select AS $field";
+                $selects[]  = !empty($joins) ? "$select" : "$select AS `$field`";
                 if ($value !== null) {
                     $bindings[] = $value;
                 }
@@ -27,21 +27,21 @@ trait MultipleUpdateWithJoin
 
             if (!$sets) {
                 foreach ($attribute as $field => $value) {
-                    $sets[] = "t.$field = j.$field";
+                    $sets[] = "t.`$field` = j.`$field`";
                 }
             }
         }
 
         $mappingKeys = [];
         foreach ($indexKeys as $key) {
-            $mappingKeys[] = "((t.$key = j.$key) OR (t.$key IS NULL AND j.$key IS NULL))";
+            $mappingKeys[] = "((t.`$key` = j.`$key`) OR (t.`$key` IS NULL AND j.`$key` IS NULL))";
         }
 
         if (!$joins || !$mappingKeys || !$sets) {
             return;
         }
 
-        $sets[]     = "t.updated_at = ?";
+        $sets[]     = "t.`updated_at` = ?";
         $bindings[] = now();
 
         $joins       = implode(' UNION ALL ', $joins);

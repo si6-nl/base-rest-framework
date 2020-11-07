@@ -47,7 +47,7 @@ trait MultipleUpdateWithSubQuery
             $bindings  = array_merge($bindings, $bindings);
         }
 
-        $sets[]     = "t1.`updated_at` = ?";
+        $sets[]     = "t.`updated_at` = ?";
         $bindings[] = now();
 
         $updates     = implode(' UNION ALL ', $updates);

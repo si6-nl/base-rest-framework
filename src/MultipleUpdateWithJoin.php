@@ -27,21 +27,21 @@ trait MultipleUpdateWithJoin
 
             if (!$sets) {
                 foreach ($attribute as $field => $value) {
-                    $sets[] = "t.`$field` = j.`$field`";
+                    $sets[] = "t1.`$field` = t2.`$field`";
                 }
             }
         }
 
         $mappingKeys = [];
         foreach ($indexKeys as $key) {
-            $mappingKeys[] = "((t.`$key` = j.`$key`) OR (t.`$key` IS NULL AND j.`$key` IS NULL))";
+            $mappingKeys[] = "((t1.`$key` = t2.`$key`) OR (t1.`$key` IS NULL AND t2.`$key` IS NULL))";
         }
 
         if (!$joins || !$mappingKeys || !$sets) {
             return;
         }
 
-        $sets[]     = "t.`updated_at` = ?";
+        $sets[]     = "t1.`updated_at` = ?";
         $bindings[] = now();
 
         $joins       = implode(' UNION ALL ', $joins);
@@ -49,7 +49,7 @@ trait MultipleUpdateWithJoin
         $sets        = implode(', ', $sets);
 
         $query = /** @lang text */
-            "UPDATE `{$table}` t JOIN ({$joins}) j ON {$mappingKeys} SET {$sets}";
+            "UPDATE `{$table}` t1 JOIN ({$joins}) t2 ON {$mappingKeys} SET {$sets}";
 
         DB::update($query, $bindings);
     }

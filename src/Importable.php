@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 trait Importable
 {
-    protected function import($attributes, $keys = [])
+    protected function import($attributes, $keys = [], $withJoin = false)
     {
         /**
          * @var Collection $attributes
@@ -26,7 +26,11 @@ trait Importable
          */
         [$updateAttributes, $insertAttributes] = $this->partitionUpdateInsert($attributes, $exists, $keys);
 
-        $this->multipleUpdate($updateAttributes, $keys);
+        if ($withJoin) {
+            $this->multipleUpdateWithJoin($updateAttributes, $keys);
+        } else {
+            $this->multipleUpdate($updateAttributes, $keys);
+        }
 
         $this->insertAttributes($insertAttributes);
 

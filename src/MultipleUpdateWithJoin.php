@@ -31,7 +31,7 @@ trait MultipleUpdateWithJoin
 
         $mappingKeys = [];
         foreach ($indexKeys as $key) {
-            $mappingKeys[] = "t.$key = j.$key";
+            $mappingKeys[] = "((t.$key = j.$key) OR (t.$key IS NULL AND j.$key IS NULL))";
         }
 
         $joins       = implode(' UNION ALL ', $joins);

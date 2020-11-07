@@ -29,7 +29,7 @@ trait MultipleUpdateWithJoin
             if (!$sets) {
                 foreach ($attribute as $field => $value) {
                     $newField  = "new_" . $field;
-                    $sets[] = "t1.$field = t1.$field";
+                    $sets[] = "t1.$field = t2.$newField";
                 }
             }
         }
@@ -52,7 +52,7 @@ trait MultipleUpdateWithJoin
         $sets        = implode(', ', $sets);
 
         $query = /** @lang text */
-            "UPDATE `{$table}` AS t1 JOIN ({$joins}) AS t2 ON {$mappingKeys} SET {$sets}";
+            "UPDATE `{$table}` AS t1, ({$joins}) AS t2 SET {$sets} WHERE {$mappingKeys}";
 
         DB::update($query, $bindings);
     }

@@ -4,13 +4,13 @@ namespace Si6\Base;
 
 use Illuminate\Support\Facades\DB;
 
-trait MultipleUpdateWithJoin
+trait MultipleUpdateWithSubQuery
 {
-    protected function multipleUpdateWithJoin($attributes, $indexKeys)
+    protected function multipleUpdateWithSubQuery($attributes, $indexKeys)
     {
         $table = DB::getTablePrefix() . $this->getTable();
 
-        $joins    = [];
+        $updates  = [];
         $bindings = [];
         $sets     = [];
 
@@ -18,45 +18,43 @@ trait MultipleUpdateWithJoin
             $selects = [];
             foreach ($attribute as $field => $value) {
                 $select    = $value === null ? 'null' : '?';
-                $newField  = "new_" . $field;
-                $selects[] = !empty($joins) ? "$select" : "$select AS $newField";
+                $selects[] = !empty($updates) ? "$select" : "$select AS $field";
                 if ($value !== null) {
                     $bindings[] = $value;
                 }
             }
-            $joins[] = 'SELECT ' . implode(', ', $selects);
+            $updates[] = 'SELECT ' . implode(', ', $selects);
 
             if (!$sets) {
                 foreach ($attribute as $field => $value) {
-                    $newField  = "new_" . $field;
-                    $sets[] = "t1.$field = t2.$newField";
+                    $sets[] = "t.$field = u.$field";
                 }
             }
         }
 
         $mappingKeys = [];
         foreach ($indexKeys as $key) {
-            $newKey = "new_" . $key;
-            $mappingKeys[] = "(t1.$key = t2.$newKey OR (t1.$key IS NULL AND t2.$newKey IS NULL))";
+            $mappingKeys[] = "(t.$key = u.$key OR (t.$key IS NULL AND u.$key IS NULL))";
         }
 
-        if (!$joins || !$mappingKeys || !$sets) {
+        if (!$updates || !$mappingKeys || !$sets) {
             return;
         }
 
         $sets[]     = "t1.`updated_at` = ?";
         $bindings[] = now();
 
-        if (count($joins) == 1) {
-            $joins[] = $joins[0];
+        if (count($updates) == 1) {
+            // This bug happen when $updates don't have UNION ALL, so weird.
+            $updates[] = $updates[0];
         }
 
-        $joins       = implode(' UNION ALL ', $joins);
+        $updates     = implode(' UNION ALL ', $updates);
         $mappingKeys = implode(' AND ', $mappingKeys);
         $sets        = implode(', ', $sets);
 
         $query = /** @lang text */
-            "UPDATE `{$table}` AS t1, ({$joins}) AS t2 SET {$sets} WHERE {$mappingKeys}";
+            "UPDATE `{$table}` t, ({$updates}) u SET {$sets} WHERE {$mappingKeys}";
 
         DB::update($query, $bindings);
     }

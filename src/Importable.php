@@ -27,7 +27,7 @@ trait Importable
         [$updateAttributes, $insertAttributes] = $this->partitionUpdateInsert($attributes, $exists, $keys);
 
         if ($withJoin) {
-            $this->multipleUpdateWithJoin($updateAttributes, $keys);
+            $this->multipleUpdateWithSubQuery($updateAttributes, $keys);
         } else {
             $this->multipleUpdate($updateAttributes, $keys);
         }

@@ -9,5 +9,5 @@ use Illuminate\Support\Facades\DB;
 trait MultipleUpdatable
 {
     use MultipleUpdateCaseWhen;
-    use MultipleUpdateWithJoin;
+    use MultipleUpdateWithSubQuery;
 }

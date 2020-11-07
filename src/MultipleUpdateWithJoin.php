@@ -47,6 +47,10 @@ trait MultipleUpdateWithJoin
         $sets[]     = "t1.`updated_at` = ?";
         $bindings[] = now();
 
+        if (count($joins) == 1) {
+            $joins[] = $joins[0];
+        }
+
         $joins       = implode(' UNION ALL ', $joins);
         $mappingKeys = implode(' AND ', $mappingKeys);
         $sets        = implode(', ', $sets);

@@ -18,7 +18,7 @@ trait MultipleUpdateWithJoin
             $selects = [];
             foreach ($attribute as $field => $value) {
                 $select     = $attribute === null ? 'null' : '?';
-                $selects[]  = !empty($joins) ? $select : "$select AS $field";
+                $selects[]  = !empty($joins) ? "$select" : "$select AS $field";
                 if ($value !== null) {
                     $bindings[] = $value;
                 }

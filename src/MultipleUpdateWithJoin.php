@@ -32,14 +32,14 @@ trait MultipleUpdateWithJoin
 
         $mappingKeys = [];
         foreach ($indexKeys as $key) {
-            $mappingKeys[] = "((t.`$key` = j.`$key`) OR (t.`$key` IS NULL AND j.`$key` IS NULL))";
+            $mappingKeys[] = "((t.$key = j.$key) OR (t.$key IS NULL AND j.$key IS NULL))";
         }
 
         if (!$joins || !$mappingKeys || !$sets) {
             return;
         }
 
-        $sets[]     = "`updated_at` = ?";
+        $sets[]     = "t.updated_at = ?";
         $bindings[] = now();
 
         $joins       = implode(' UNION ALL ', $joins);

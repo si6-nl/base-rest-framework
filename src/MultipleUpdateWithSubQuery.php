@@ -41,13 +41,14 @@ trait MultipleUpdateWithSubQuery
             return;
         }
 
-        $sets[]     = "t1.`updated_at` = ?";
-        $bindings[] = now();
-
         if (count($updates) == 1) {
             // This bug happen when $updates don't have UNION ALL, so weird.
             $updates[] = $updates[0];
+            $bindings  = array_merge($bindings, $bindings);
         }
+
+        $sets[]     = "t1.`updated_at` = ?";
+        $bindings[] = now();
 
         $updates     = implode(' UNION ALL ', $updates);
         $mappingKeys = implode(' AND ', $mappingKeys);

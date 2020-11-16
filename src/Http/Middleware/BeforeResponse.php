@@ -38,7 +38,7 @@ class BeforeResponse
         $response = $next($request);
 
         // make some changing before response
-        $this->adminActivity($request, $response);
+//        $this->adminActivity($request, $response);
 
         return $response;
     }
